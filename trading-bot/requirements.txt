@@ -1,0 +1,5 @@
+# Python-beroenden för trading-boten
+discord.py>=2.3.2
+httpx>=0.27.0
+python-dotenv>=1.0.1
+anthropic>=0.39.0
