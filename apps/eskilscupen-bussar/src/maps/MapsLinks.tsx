@@ -1,6 +1,4 @@
 import {
-  mapsLocationForStop,
-  mapsLocationForVenue,
   needsSignageNotice,
   SIGNAGE_NOTICE,
   type GoogleMapsLocation,
@@ -9,28 +7,19 @@ import { mapsEnabled } from './feature-flag'
 
 const ENABLED = mapsEnabled()
 
-interface Props {
-  /** Hållplats-id eller venue-id. */
-  id: string
-  kind: 'stop' | 'venue'
-}
-
 /**
  * Liten länk som öppnar vägbeskrivning till platsen i Google Maps.
  *
- * Renderar ingenting när feature-flaggan är av, och ingenting när platsen
- * saknar ett belagt läge — obekräftade platser filtreras bort redan i
- * konfigurationen, så det blir hellre ingen knapp än en som leder fel.
+ * Vilka platser som får en länk avgörs av `journeyLinks`, som ser till att
+ * samma navigeringsmål bara visas en gång per resealternativ. Här sitter
+ * feature-flaggan: är den av renderas ingenting alls.
  *
  * Appen hämtar aldrig något från Google och ber aldrig om användarens position.
  * Den bygger bara en adress som användaren själv klickar på; Google Maps utgår
  * sedan från telefonens egen position.
  */
-export function MapsLinks({ id, kind }: Props) {
+export function MapsLinks({ location }: { location?: GoogleMapsLocation }) {
   if (!ENABLED) return null
-
-  const location: GoogleMapsLocation | undefined =
-    kind === 'venue' ? mapsLocationForVenue(id) : mapsLocationForStop(id)
   if (!location) return null
 
   return (
@@ -47,6 +36,3 @@ export function MapsLinks({ id, kind }: Props) {
     </span>
   )
 }
-
-/** Är länkarna påslagna? Används för att slippa rendera tomma rader. */
-export const mapsLinksEnabled = ENABLED

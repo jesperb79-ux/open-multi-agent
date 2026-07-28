@@ -21,7 +21,6 @@ import {
 } from './config/tournament'
 import { connections, servicesServingStop, isStopServed, timetable, validateData } from './data/timetable'
 import { journeyKey } from './journey-key'
-import { MapsLinks, mapsLinksEnabled } from './maps/MapsLinks'
 import { placeByKey, venuesWithoutStop } from './places'
 import { DEFAULT_MINIMUM_TRANSFER_MINUTES, findJourneys } from './planner/findJourneys'
 import { tryParseTime } from './planner/time'
@@ -30,10 +29,6 @@ import { PlannerError, type Journey } from './types'
 /** Etikett för trafikdygnet ur den importerade tidtabellen, t.ex. "Fredag & lördag". */
 const serviceLabel = (serviceId: string) =>
   timetable.services.find((service) => service.id === serviceId)?.label ?? serviceId
-
-/** "venue:harlyckan-ip@elinebergsplatsen" -> "harlyckan-ip"; "stop:raa-ip" -> "raa-ip". */
-const venueIdOf = (placeKey: string): string =>
-  placeKey.startsWith('venue:') ? placeKey.slice('venue:'.length).split('@')[0] : placeKey.slice('stop:'.length)
 
 type Result =
   | { kind: 'idle' }
@@ -299,18 +294,6 @@ export default function App() {
                 {originPlace?.note && `Start: ${originPlace.note}. `}
                 {destinationPlace?.note && `Mål: ${destinationPlace.note}.`}
               </p>
-            )}
-            {mapsLinksEnabled && originPlace && destinationPlace && (
-              <dl className="venue-maps">
-                <dt>{originPlace.label}</dt>
-                <dd>
-                  <MapsLinks id={venueIdOf(originPlace.key)} kind="venue" />
-                </dd>
-                <dt>{destinationPlace.label}</dt>
-                <dd>
-                  <MapsLinks id={venueIdOf(destinationPlace.key)} kind="venue" />
-                </dd>
-              </dl>
             )}
             {result.journeys.map((journey, index) => (
               <JourneyCard key={journeyKey(searchId, index, journey)} journey={journey} index={index} />

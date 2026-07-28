@@ -4,6 +4,7 @@ import { connections, timetable, venues } from '../src/data/timetable'
 import { findJourneys } from '../src/planner/findJourneys'
 import type { Journey } from '../src/types'
 import { parseMapsFlag } from '../src/maps/feature-flag'
+import { journeyLinks, linkKey } from '../src/maps/journey-links'
 import matchesDocument from '../data/google-maps-matches.json'
 import {
   SIGNAGE_NOTICE,
@@ -235,8 +236,12 @@ describe('täckning', () => {
     expect(mapsLocationForStop('finns-inte')).toBeUndefined()
     // Mörarp saknas på kartan och har därför ingen konfiguration heller.
     expect(mapsLocationForStop('morarp-vidablick-ip')).toBeUndefined()
-    const source = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
-    expect(source).toContain('if (!location) return null')
+    // Platser utan belagt läge sållas bort när länklistan byggs, och
+    // komponenten renderar ändå ingenting om den ändå skulle få undefined.
+    const links = readFileSync(new URL('../src/maps/journey-links.ts', import.meta.url), 'utf8')
+    expect(links).toContain('if (!location) continue')
+    const component = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
+    expect(component).toContain('if (!location) return null')
   })
 
   it('inga koordinater är påhittade', () => {
@@ -290,6 +295,16 @@ describe('feature flag', () => {
     for (const value of ['true', 'TRUE', ' true ', '\ttrue\n']) {
       expect(parseMapsFlag(value), value).toBe(true)
     }
+  })
+
+  it('stoppar renderingen i komponenten, inte i länkurvalet', () => {
+    // Flaggan sitter där länken faktiskt visas. journeyLinks är ren och kan
+    // därför testas utan att miljövariabeln behöver simuleras.
+    const component = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
+    expect(component).toContain('if (!ENABLED) return null')
+    const links = readFileSync(new URL('../src/maps/journey-links.ts', import.meta.url), 'utf8')
+    expect(links).not.toContain('import.meta.env')
+    expect(links).not.toContain('mapsEnabled')
   })
 })
 
@@ -398,5 +413,105 @@ describe('Navigera-länkar på riktiga resor', () => {
     const kyrkan = journeyFor('norrvalla-ip', 'elinebergskyrkan', '13:00', 'sondag')
     expect(kyrkan.legs.at(-1)!.toStop).toBe('elinebergskyrkan')
     expect(mapsLocationForStop('elinebergskyrkan')!.query).toContain('Elinebergskyrkan')
+  })
+})
+
+/**
+ * Länkarna ska inte trängas. Per resealternativ visas högst en vid
+ * påstigningen, en vid varje faktiskt byte och en vid slutmålet — och samma
+ * navigeringsmål aldrig mer än en gång.
+ */
+describe('antal Navigera-länkar per resa', () => {
+  const journeyFor = (originStop: string, destinationStop: string, time: string, serviceId: string) =>
+    findJourneys({ connections, originStop, destinationStop, earliestDeparture: time, serviceId })[0]
+
+  const cases: [string, string, string, string, string][] = [
+    ['Laröds IP → Filborna IP', 'larods-ip', 'filborna-ip', '10:00', 'fre-lor'],
+    ['Rydebäck IP → Olympia', 'rydeback-ip', 'olympiaskolan', '06:00', 'fre-lor'],
+    ['Ättekulla IP → Västergård IP', 'attekulla-ip', 'vastergard-ip', '14:00', 'sondag'],
+    ['via Harlyckan', 'elinebergsplatsen', 'larods-ip', '13:00', 'fre-lor'],
+    ['via Flygfältet', 'flygfaltet', 'norrvalla-ip', '08:00', 'sondag'],
+    ['via Glumslöv', 'glumslov', 'norrvalla-ip', '09:00', 'fre-lor'],
+    ['via Bårslöv', 'barslov', 'norrvalla-ip', '09:00', 'sondag'],
+    ['via Gantofta', 'gantofta', 'norrvalla-ip', '09:00', 'sondag'],
+  ]
+
+  it('samma navigeringsmål visas aldrig två gånger i samma resa', () => {
+    for (const [name, from, to, time, service] of cases) {
+      const links = journeyLinks(journeyFor(from, to, time, service))
+      const destinations = [...links.values()].map((l) => l.directionsUrl)
+      expect(new Set(destinations).size, name).toBe(destinations.length)
+    }
+  })
+
+  it('samma plats visas bara en gång per resealternativ', () => {
+    for (const [name, from, to, time, service] of cases) {
+      const links = journeyLinks(journeyFor(from, to, time, service))
+      const ids = [...links.keys()].map((key) => key.split(':')[1])
+      expect(new Set(ids).size, name).toBe(ids.length)
+    }
+  })
+
+  it('start, byte och mål får varsin länk', () => {
+    // Laröds IP → Filborna IP har ett byte vid Norrvalla IP.
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    expect(journey.transfers).toBe(1)
+    const links = journeyLinks(journey)
+
+    expect(links.has(linkKey('start', journey.legs[0].fromStop))).toBe(true)
+    expect(links.has(linkKey('transfer', journey.transfersDetail[0].stopId))).toBe(true)
+    expect(links.has(linkKey('destination', journey.legs.at(-1)!.toStop))).toBe(true)
+  })
+
+  it('en resa utan byte får högst två länkar', () => {
+    const journey = journeyFor('rydeback-ip', 'olympiaskolan', '06:00', 'fre-lor')
+    expect(journey.transfers).toBe(0)
+    expect(journeyLinks(journey).size).toBeLessThanOrEqual(2)
+  })
+
+  it('en resa med ett byte får högst tre länkar', () => {
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    expect(journey.transfers).toBe(1)
+    expect(journeyLinks(journey).size).toBeLessThanOrEqual(3)
+  })
+
+  it('antalet länkar överstiger aldrig antalet byten plus två', () => {
+    for (const [name, from, to, time, service] of cases) {
+      const journey = journeyFor(from, to, time, service)
+      expect(journeyLinks(journey).size, name).toBeLessThanOrEqual(journey.transfers + 2)
+    }
+  })
+
+  it('mellanliggande hållplatser får ingen länk', () => {
+    // Linje 11 passerar sju hållplatser mellan Rydebäck och Olympiaskolan.
+    const journey = journeyFor('rydeback-ip', 'olympiaskolan', '06:00', 'fre-lor')
+    const passed = journey.legs.flatMap((leg) => leg.intermediateStops)
+    expect(passed.length).toBeGreaterThan(0)
+    const linkedStops = [...journeyLinks(journey).keys()].map((key) => key.split(':')[1])
+    for (const stopId of passed) {
+      expect(linkedStops, stopId).not.toContain(stopId)
+    }
+  })
+
+  it('en plats utan belagt läge får ingen länk ens som slutmål', () => {
+    const journey = journeyFor('norrvalla-ip', 'morarp-vidablick-ip', '07:00', 'sondag')
+    const links = journeyLinks(journey)
+    expect(links.has(linkKey('destination', 'morarp-vidablick-ip'))).toBe(false)
+    expect(links.has(linkKey('start', journey.legs[0].fromStop))).toBe(true)
+  })
+
+  it('översikten ovanför resekorten har inga egna länkar kvar', () => {
+    // Elva spelplatser delar navigeringsmål med sin hållplats, så länkarna i
+    // översikten var dubbletter av dem i resekortet.
+    const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
+    expect(app).not.toContain('venue-maps')
+    expect(app).not.toContain('MapsLinks')
+  })
+
+  it('länkarna renderas bara från resekortet', () => {
+    const card = readFileSync(new URL('../src/components/JourneyCard.tsx', import.meta.url), 'utf8')
+    expect(card).toContain('journeyLinks(journey)')
+    // Tre ställen: påstigning, byte och slutmål.
+    expect((card.match(/<MapsLinks /g) ?? []).length).toBe(3)
   })
 })

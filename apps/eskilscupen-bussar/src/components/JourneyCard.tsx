@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { routeName, stopName } from '../data/timetable'
+import { journeyLinks, linkKey } from '../maps/journey-links'
 import { MapsLinks } from '../maps/MapsLinks'
 import { formatDuration } from '../planner/time'
 import type { Journey } from '../types'
@@ -13,6 +14,8 @@ function timeWithDayMark(time: string, minutes: number, departureMinutes: number
 }
 
 export function JourneyCard({ journey, index }: { journey: Journey; index: number }) {
+  // Navigera-länkar: påstigning, byten och slutmål, utan dubbletter.
+  const links = useMemo(() => journeyLinks(journey), [journey])
   const [expandedLegs, setExpandedLegs] = useState<number[]>([])
   const toggleLeg = (legIndex: number) =>
     setExpandedLegs((current) =>
@@ -54,7 +57,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                   </span>
                   Byte vid <strong>{stopName(transfer.stopId)}</strong> ·{' '}
                   {plural(transfer.waitMinutes, 'minut', 'minuter')} väntetid
-                  <MapsLinks id={transfer.stopId} kind="stop" />
+                  <MapsLinks location={links.get(linkKey('transfer', transfer.stopId))} />
                 </p>
               )}
 
@@ -63,7 +66,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   <span className="route">{routeName(leg.routeId)}</span> från{' '}
                   <strong>{stopName(leg.fromStop)}</strong>
-                  {legIndex === 0 && <MapsLinks id={leg.fromStop} kind="stop" />}
+                  {legIndex === 0 && <MapsLinks location={links.get(linkKey('start', leg.fromStop))} />}
                 </span>
               </p>
 
@@ -94,7 +97,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   Ankomst <strong>{stopName(leg.toStop)}</strong>
                   {legIndex === journey.legs.length - 1 && (
-                    <MapsLinks id={leg.toStop} kind="stop" />
+                    <MapsLinks location={links.get(linkKey('destination', leg.toStop))} />
                   )}
                 </span>
               </p>

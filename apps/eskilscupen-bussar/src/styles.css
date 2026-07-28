@@ -471,20 +471,3 @@ input[type='time'] {
   color: var(--muted);
 }
 
-.venue-maps {
-  margin: 0.75rem 0 0;
-  font-size: 0.85rem;
-}
-
-.venue-maps dt {
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.venue-maps dd {
-  margin: 0.1rem 0 0.5rem;
-}
-
-.venue-maps .maps-links {
-  margin-left: 0;
-}
