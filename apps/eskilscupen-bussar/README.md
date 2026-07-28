@@ -20,6 +20,8 @@ npm run dev            # http://localhost:5173
 
 ```bash
 npm test               # kör alla tester (vitest)
+npm run verify:import  # skriv data/verification-sample.md för manuell PDF-jämförelse
+npm run verify:journeys # skriv data/journey-checks.md med verkliga resefall
 npm run lint           # typkontroll av app, tester och skript
 npm run build          # produktionsbygge till dist/
 npm run preview        # serva dist/ lokalt
@@ -43,11 +45,13 @@ underkatalog.
 ```
 data/busslinjer2026eskilscupen.pdf   originalet — ändras aldrig
 data/import-report.json              rapport över allt som avvisats eller sett konstigt ut
+data/verification-sample.md          31 turer att jämföra mot PDF:en för hand
+data/journey-checks.md               13 verkliga resefall, förväntat mot faktiskt
 scripts/pdf-text.mjs                 textutvinning ur PDF (utan externa beroenden)
 scripts/stop-config.mjs              hållplatser, alias, fotbollsplaner, trafikdygn
 scripts/import-timetable.mjs         PDF -> normaliserad JSON + rapport
 src/data/timetable.json              genererad tidtabell (linjer, hållplatser, turer)
-src/data/venues.json                 genererad koppling fotbollsplan -> hållplats
+src/data/venues.json                 genererad koppling fotbollsplan -> hållplats(er)
 src/data/timetable.ts                inläsning och validering av data
 src/planner/findJourneys.ts          reseplaneraren (helt fristående från gränssnittet)
 src/planner/time.ts                  tidsparsning och formatering
@@ -80,9 +84,9 @@ avgångstider.
 7. Allt som avvisats, saknats eller sett konstigt ut hamnar i
    `data/import-report.json`.
 
-Resultatet av senaste importen: **846 turer, 5 330 förbindelser, 9 linjer,
-27 hållplatser, 0 fel, 8 varningar** (samtliga varningar är borttagna
-dubblettkolumner).
+Resultatet av senaste importen: **854 PDF-kolumner → 846 turer, 5 330
+förbindelser, 9 linjer, 28 hållplatser, 0 fel, 9 varningar** (8 borttagna
+dubblettkolumner och den olösta Harlyckan-frågan nedan).
 
 `src/data/timetable.json` innehåller turer med hållplatsföljd. Förbindelserna
 (`BusConnection`, en per hållplatspar) byggs i webbläsaren av
@@ -136,7 +140,9 @@ En sökning på hela dagens trafik tar ungefär 10–20 ms.
   torsdag ger ett tydligt meddelande om att cupbussarna inte kör. Vill man låsa
   appen till cupens faktiska datum sätts det i `SERVICES` i
   `scripts/stop-config.mjs`.
-* **Hållplatser med flera stavningar är samma hållplats.** Se nedan.
+* **Stavningsvarianter slås ihop, olika hållplatsnamn gör det inte.** En plan
+  som nås från två olika hållplatser får två poster i platsväljaren i stället
+  för en hopslagen hållplats — se punkt 1 under Kända oklarheter.
 * **Ingen gångtid mellan hållplatser.** Appen planerar bara bussresor. Byten
   sker vid samma hållplats, och en resa mellan två planer som delar hållplats
   avvisas med ett meddelande i stället för att visa en buss.
@@ -149,13 +155,29 @@ En sökning på hela dagens trafik tar ungefär 10–20 ms.
 Dessa är hittade vid importen och hanterade — men värda att stämma av med
 arrangören inför nästa år:
 
-1. **Harlyckan har tre olika namn.** "Elinebergsplatsen Harlyckan IP" (linje 11),
-   "Elinebergskyrkan Harlyckan IP" (linje 12 och 21) och
-   "Elinebergsplansen / Harlyckan IP" (linje 13, 14 och 17). Den tredje är en
-   uppenbar felstavning av den första. Elinebergsplatsen och Elinebergskyrkan är
-   däremot två olika landmärken. Alla tre behandlas som **en** hållplats, vilket
-   är rimligt eftersom samtliga är märkta "Harlyckan IP" — men det betyder att
-   ett byte där antas ske utan gångtid.
+1. **Harlyckan har tre olika namn — och de är inte alla samma hållplats.**
+   Underlaget använder "Elinebergsplatsen Harlyckan IP" (linje 11),
+   "Elinebergsplansen / Harlyckan IP" (linje 13, 14 och 17) och
+   "Elinebergskyrkan Harlyckan IP" (linje 12 och 21).
+
+   *Elinebergsplatsen och Elinebergsplansen är samma hållplats.* De skiljer sig
+   med en bokstav, "plansen" finns inte som svenskt ortnamn, och de har exakt
+   samma grannhållplatser och körtider (Västra Ramlösa Skola 4 minuter på både
+   linje 11 och linje 13/14). Det är en felstavning.
+
+   *Elinebergskyrkan hålls separerad.* Kyrkan är ett eget landmärke, inte en
+   stavning av Elinebergsplatsen, och tidtabellen likställer dem aldrig — ingen
+   sida använder två av namnen samtidigt. Körtiderna är förenliga med att det är
+   samma plats (Bårslöv 12 minuter från både "kyrkan" på linje 12 och "plansen"
+   på linje 17, Västra Ramlösa Skola 4 minuter från båda), men körtider är
+   tidtabellsvärden och kan inte skilja på två hållplatser några hundra meter
+   från varandra. **Frågan går inte att avgöra ur underlaget**, så de två
+   hållplatserna hålls isär: planen Harlyckans IP får två poster i platsväljaren,
+   och appen visar en varning om att det är oklart om de är samma läge.
+   Kontrollera med arrangören.
+
+   Konsekvensen syns i reseplaneringen: Flygfältet → Elinebergskyrkan kräver två
+   byten på söndagen, eftersom linje 17 bara stannar vid Elinebergsplatsen.
 2. **"Norvalla IP" är felstavat** i samtliga tabeller; innehållssidan skriver
    "Norrvalla IP". Appen använder den senare stavningen.
 3. **"Vätergård" är felstavat** i "Adolfsberg (Vätergård IP 300m)";
@@ -203,7 +225,7 @@ fortfarande aldrig ändras.
 
 ## Tester
 
-`npm test` kör 44 tester i tre filer:
+`npm test` kör 57 tester i fyra filer:
 
 * `tests/findJourneys.test.ts` — algoritmen mot små, handskrivna nät: direktresa,
   ett byte, två byten, för kort bytestid, senare avgång med tidigare ankomst,
@@ -215,6 +237,19 @@ fortfarande aldrig ändras.
   midnattspassage, ogiltiga klockslag, okända hållplatsnamn, rader utan namn,
   ofullständiga kolumner och dubblettborttagning.
 * `tests/timetable-data.test.ts` — den riktiga, importerade tidtabellen.
+* `tests/journey-checks.test.ts` — tretton verkliga resefall (direktresa, ett
+  byte, två byten, för kort bytestid, fredag/lördag, söndag, tur som hoppar över
+  hållplatser, linje 17:s snabbtur, Harlyckan som start och som mål, ingen resa).
+  Testet skriver samtidigt kontrollrapporten `data/journey-checks.md` med
+  förväntat mot faktiskt utfall.
+
+Två genererade filer finns för manuell granskning:
+
+* `data/verification-sample.md` — 31 importerade turer med PDF-sida, deltabell,
+  kolumn, linje, trafikdag, riktning och samtliga hållplatser med tider. Urvalet
+  täcker sidor delade av `//`, kolumner med tomma celler, linje 17:s snabbtur och
+  båda kolumnerna i dubblettgrupper.
+* `data/journey-checks.md` — kontrollrapporten ovan.
 
 ## Vad som medvetet inte finns med
 

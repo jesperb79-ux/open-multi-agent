@@ -104,10 +104,18 @@ function readPageHeader(rows) {
   if (!text) return null
   const route = /LINJE\s*(\d+)/i.exec(text)
   const service = SERVICE_PATTERNS.find((s) => s.pattern.test(text))
+  const direction = /NORR\s*\/\s*SÖDERUT/i.test(text)
+    ? 'norr/söderut'
+    : /NORRUT/i.test(text)
+      ? 'norrut'
+      : /SÖDERUT/i.test(text)
+        ? 'söderut'
+        : null
   return {
     text: normaliseLabel(text.replace(/BUSSLINJER ESKILSCUPEN \d+/i, '')),
     routeId: route ? route[1] : null,
     serviceId: service ? service.serviceId : null,
+    direction,
   }
 }
 
@@ -214,6 +222,8 @@ export function buildTrips(pages, stopIndex) {
       const columns = columnsOf(block)
       /** @type {{stopId: string, label: string, minutes: number}[][]} */
       const columnStops = columns.map(() => [])
+      /** How many stop rows the printed sub-table has, for the verification file. */
+      let blockStopCount = 0
 
       for (const row of block) {
         const stopId = stopIndex.get(row.label.toLowerCase())
@@ -228,6 +238,7 @@ export function buildTrips(pages, stopIndex) {
           })
           continue
         }
+        blockStopCount += 1
         for (const cell of row.cells) {
           const raw = cell.text.trim()
           const minutes = parseTimeToMinutes(raw)
@@ -247,6 +258,12 @@ export function buildTrips(pages, stopIndex) {
 
       columnStops.forEach((stopTimes, columnIndex) => {
         const tripId = `${header.routeId}-${header.serviceId}-p${page}b${blockIndex + 1}c${columnIndex + 1}`
+        const source = {
+          page,
+          block: blockIndex + 1,
+          column: columnIndex + 1,
+          columnX: Math.round(columns[columnIndex] * 10) / 10,
+        }
         if (stopTimes.length === 0) return
         if (stopTimes.length < 2) {
           issues.push({
@@ -294,7 +311,11 @@ export function buildTrips(pages, stopIndex) {
           id: tripId,
           routeId: header.routeId,
           serviceId: header.serviceId,
+          direction: header.direction,
           page,
+          source,
+          blockStopCount,
+          skipsStops: rolled.length < blockStopCount,
           headsign: rolled[rolled.length - 1].stopId,
           stopTimes: rolled.map((s) => ({ stopId: s.stopId, time: formatMinutes(s.minutes) })),
         })
@@ -350,20 +371,41 @@ function main() {
   const { trips: rawTrips, issues, unknownLabels } = buildTrips(pages, stopIndex)
   const trips = dedupeTrips(rawTrips, issues)
 
-  // Venue bindings must resolve to a stop that actually exists.
+  // Venue bindings must resolve to stops that actually exist and are served.
   const stopIds = new Set(STOPS.map((s) => s.id))
+  const servedStopIds = new Set(trips.flatMap((t) => t.stopTimes.map((s) => s.stopId)))
   for (const venue of VENUES) {
-    if (!stopIds.has(venue.stopId)) {
+    if (venue.stopIds.length === 0) {
       issues.push({
         level: 'error',
         code: 'venue-without-stop',
-        detail: `Fotbollsplanen "${venue.name}" pekar på okänd hållplats "${venue.stopId}"`,
+        detail: `Fotbollsplanen "${venue.name}" saknar kopplad hållplats`,
+      })
+    }
+    for (const stopId of venue.stopIds) {
+      if (!stopIds.has(stopId)) {
+        issues.push({
+          level: 'error',
+          code: 'venue-without-stop',
+          detail: `Fotbollsplanen "${venue.name}" pekar på okänd hållplats "${stopId}"`,
+        })
+      } else if (!servedStopIds.has(stopId)) {
+        issues.push({
+          level: 'error',
+          code: 'venue-stop-without-departures',
+          detail: `Hållplatsen "${stopId}" (${venue.name}) har inga avgångar i tidtabellen`,
+        })
+      }
+    }
+    if (venue.unresolved) {
+      issues.push({
+        level: 'warning',
+        code: 'venue-stops-unresolved',
+        detail: `${venue.name}: ${venue.unresolved}`,
       })
     }
   }
 
-  // Only ship stops that are actually served — plus a note about the rest.
-  const servedStopIds = new Set(trips.flatMap((t) => t.stopTimes.map((s) => s.stopId)))
   for (const stop of STOPS) {
     if (!servedStopIds.has(stop.id)) {
       issues.push({

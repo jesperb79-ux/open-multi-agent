@@ -35,6 +35,9 @@ export default function App() {
   const service = useMemo(() => serviceForDate(date), [date])
   const originPlace = placeByKey.get(origin)
   const destinationPlace = placeByKey.get(destination)
+  const unresolvedNotes = [
+    ...new Set([originPlace?.unresolved, destinationPlace?.unresolved].filter(Boolean) as string[]),
+  ]
 
   const swap = () => {
     setOrigin(destination)
@@ -190,6 +193,16 @@ export default function App() {
         {result.kind === 'empty' && <div className="notice notice-warning">{result.message}</div>}
         {result.kind === 'journeys' && (
           <>
+            {unresolvedNotes.length > 0 && (
+              <div className="notice notice-warning" role="status">
+                <p>
+                  <strong>Osäker hållplats</strong>
+                </p>
+                {unresolvedNotes.map((note) => (
+                  <p key={note}>{note}</p>
+                ))}
+              </div>
+            )}
             {(originPlace?.note || destinationPlace?.note) && (
               <p className="venue-note">
                 {originPlace?.note && `Start: ${originPlace.note}. `}

@@ -1,5 +1,4 @@
-import { stopsById, venueStopIds, venues } from './data/timetable'
-import { timetable } from './data/timetable'
+import { stopName, stopsById, timetable, venueStopIds, venues } from './data/timetable'
 
 /** One selectable entry in the from/to pickers. */
 export interface Place {
@@ -9,22 +8,31 @@ export interface Place {
   stopId: string
   group: 'Fotbollsplaner' | 'Övriga hållplatser'
   note?: string
+  /** Open question about which physical stop serves this venue. */
+  unresolved?: string
 }
 
 /**
- * Football venues first, then the remaining stops. Two venues sharing a stop
- * both appear, so a user can pick the name they recognise.
+ * Football venues first, then the remaining stops.
+ *
+ * A venue served by more than one stop gets one entry per stop, because the
+ * timetable does not tell us whether those stops are the same place. The
+ * traveller picks the one their bus actually calls at.
  */
 export const places: Place[] = [
   ...venues
-    .filter((venue) => stopsById.has(venue.stopId))
-    .map((venue): Place => ({
-      key: `venue:${venue.id}`,
-      label: venue.name,
-      stopId: venue.stopId,
-      group: 'Fotbollsplaner',
-      note: venue.note,
-    }))
+    .flatMap((venue) =>
+      venue.stopIds
+        .filter((stopId) => stopsById.has(stopId))
+        .map((stopId, _index, served): Place => ({
+          key: `venue:${venue.id}@${stopId}`,
+          label: served.length > 1 ? `${venue.name} – ${stopName(stopId)}` : venue.name,
+          stopId,
+          group: 'Fotbollsplaner',
+          note: venue.note,
+          unresolved: venue.unresolved,
+        })),
+    )
     .sort((a, b) => a.label.localeCompare(b.label, 'sv')),
   ...timetable.stops
     .filter((stop) => !venueStopIds.has(stop.id))
@@ -39,5 +47,7 @@ export const places: Place[] = [
 
 export const placeByKey = new Map(places.map((place) => [place.key, place]))
 
-/** Venues without a stop in the timetable — surfaced as a data problem. */
-export const venuesWithoutStop = venues.filter((venue) => !stopsById.has(venue.stopId))
+/** Venues with no stop at all in the timetable — surfaced as a data problem. */
+export const venuesWithoutStop = venues.filter(
+  (venue) => !venue.stopIds.some((stopId) => stopsById.has(stopId)),
+)

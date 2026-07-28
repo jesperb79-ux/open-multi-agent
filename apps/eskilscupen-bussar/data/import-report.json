@@ -7,13 +7,13 @@
   "summary": {
     "pages": 24,
     "routes": 9,
-    "stops": 27,
+    "stops": 28,
     "trips": 846,
     "connections": 5330,
     "duplicatesRemoved": 8,
     "tripsRejected": 0,
     "errors": 0,
-    "warnings": 8
+    "warnings": 9
   },
   "unknownStopLabels": [],
   "issues": [
@@ -72,6 +72,11 @@
       "page": 19,
       "tripId": "15-sondag-p19b2c2",
       "detail": "Identisk med 15-sondag-p19b2c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "venue-stops-unresolved",
+      "detail": "Harlyckans IP: Tidtabellen använder två olika hållplatsnamn för Harlyckans IP: \"Elinebergsplatsen\" (linje 11, 13, 14, 17) och \"Elinebergskyrkan\" (linje 12, 21). Det går inte att avgöra ur underlaget om det är samma fysiska hållplats. De hålls därför isär, och ett byte mellan dem planeras inte som ett bussbyte utan kräver att du går. Kontrollera med arrangören."
     }
   ]
 }

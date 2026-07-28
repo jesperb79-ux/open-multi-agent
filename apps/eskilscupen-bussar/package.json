@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Reseplanerare för Eskilscupens bussar i Helsingborg",
+  "description": "Reseplanerare f\u00f6r Eskilscupens bussar i Helsingborg",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -11,7 +11,9 @@
     "lint": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "import": "node scripts/import-timetable.mjs"
+    "import": "node scripts/import-timetable.mjs",
+    "verify:import": "node scripts/verify-import.mjs",
+    "verify:journeys": "vitest run tests/journey-checks.test.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

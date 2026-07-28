@@ -15,8 +15,8 @@ export const routesById = new Map(timetable.routes.map((r) => [r.id, r]))
 export const stopName = (stopId: string): string => stopsById.get(stopId)?.name ?? stopId
 export const routeName = (routeId: string): string => routesById.get(routeId)?.name ?? `Linje ${routeId}`
 
-/** Stops that no venue is attached to, so the UI can list them separately. */
-export const venueStopIds = new Set(venues.map((v) => v.stopId))
+/** Stops that a venue is attached to, so the UI can list the rest separately. */
+export const venueStopIds = new Set(venues.flatMap((v) => v.stopIds))
 
 /** The service calendar that runs on a given `YYYY-MM-DD` date, if any. */
 export function serviceForDate(isoDate: string, services: Service[] = timetable.services): Service | null {
@@ -41,10 +41,16 @@ export function validateData(): DataProblem[] {
     problems.push({ code: 'no-trips', message: 'Tidtabellen innehåller inga avgångar.' })
   }
   for (const venue of venues) {
-    if (!stopsById.has(venue.stopId)) {
+    const served = venue.stopIds.filter((stopId) => stopsById.has(stopId))
+    if (served.length === 0) {
       problems.push({
         code: 'venue-without-stop',
         message: `Fotbollsplanen ${venue.name} saknar en hållplats som trafikeras av cupbussarna.`,
+      })
+    } else if (served.length < venue.stopIds.length) {
+      problems.push({
+        code: 'unknown-stop-reference',
+        message: `Fotbollsplanen ${venue.name} pekar på en hållplats som inte finns i tidtabellen.`,
       })
     }
   }

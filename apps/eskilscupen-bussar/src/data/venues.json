@@ -2,82 +2,114 @@
   {
     "id": "norrvalla-ip",
     "name": "Norrvalla IP",
-    "stopId": "norrvalla-ip"
+    "stopIds": [
+      "norrvalla-ip"
+    ]
   },
   {
     "id": "olympia",
     "name": "Olympia",
-    "stopId": "olympiaskolan",
+    "stopIds": [
+      "olympiaskolan"
+    ],
     "note": "Hållplats Olympiaskolan"
   },
   {
     "id": "filborna-ip",
     "name": "Filborna IP",
-    "stopId": "filborna-ip",
+    "stopIds": [
+      "filborna-ip"
+    ],
     "note": "Hållplats Filbornaskolan"
   },
   {
     "id": "vastergard-ip",
     "name": "Västergård IP",
-    "stopId": "vastergard-ip",
+    "stopIds": [
+      "vastergard-ip"
+    ],
     "note": "Hållplats Adolfsberg, ca 300 m promenad"
   },
   {
     "id": "harlyckan-ip",
     "name": "Harlyckans IP",
-    "stopId": "harlyckan-ip",
-    "note": "Hållplats Elinebergsplatsen"
+    "stopIds": [
+      "elinebergsplatsen",
+      "elinebergskyrkan"
+    ],
+    "note": "Två hållplatsnamn i tidtabellen",
+    "unresolved": "Tidtabellen använder två olika hållplatsnamn för Harlyckans IP: \"Elinebergsplatsen\" (linje 11, 13, 14, 17) och \"Elinebergskyrkan\" (linje 12, 21). Det går inte att avgöra ur underlaget om det är samma fysiska hållplats. De hålls därför isär, och ett byte mellan dem planeras inte som ett bussbyte utan kräver att du går. Kontrollera med arrangören."
   },
   {
     "id": "hedens-ip",
     "name": "Hedens IP",
-    "stopId": "hedens-ip",
+    "stopIds": [
+      "hedens-ip"
+    ],
     "note": "Hållplats Högastensskolan"
   },
   {
     "id": "attekulla-ip",
     "name": "Ättekulla IP",
-    "stopId": "attekulla-ip"
+    "stopIds": [
+      "attekulla-ip"
+    ]
   },
   {
     "id": "raa-ip",
     "name": "Råå IP",
-    "stopId": "raa-ip"
+    "stopIds": [
+      "raa-ip"
+    ]
   },
   {
     "id": "orby-ip",
     "name": "Örby IP",
-    "stopId": "orby-ip"
+    "stopIds": [
+      "orby-ip"
+    ]
   },
   {
     "id": "rydeback-ip",
     "name": "Rydebäck IP",
-    "stopId": "rydeback-ip"
+    "stopIds": [
+      "rydeback-ip"
+    ]
   },
   {
     "id": "maria-park-ip",
     "name": "Maria Park IP",
-    "stopId": "maria-park"
+    "stopIds": [
+      "maria-park"
+    ]
   },
   {
     "id": "larods-ip",
     "name": "Laröds IP",
-    "stopId": "larods-ip"
+    "stopIds": [
+      "larods-ip"
+    ]
   },
   {
     "id": "allerums-ip",
     "name": "Allerums IP",
-    "stopId": "allerums-ip"
+    "stopIds": [
+      "allerums-ip"
+    ]
   },
   {
     "id": "toftavallen",
     "name": "Toftavallen",
-    "stopId": "odakra-toftavallen",
+    "stopIds": [
+      "odakra-toftavallen"
+    ],
     "note": "Hållplats Spritan, Ödåkra"
   },
   {
     "id": "morarp-vidablick-ip",
     "name": "Mörarp Vidablick IP",
-    "stopId": "morarp-vidablick-ip"
+    "stopIds": [
+      "morarp-vidablick-ip"
+    ]
   }
 ]

@@ -5,12 +5,27 @@
  * stable ids. When next year's timetable arrives, run the importer, read the
  * "unknown stop label" entries in the report, and add them here.
  *
- * `aliases` must contain every spelling that occurs in the PDF, exactly as the
- * PDF writes it (the importer trims and collapses whitespace, nothing else).
+ * Two different things are kept apart:
+ *
+ *   `aliases`       different spellings of the SAME physical stop. Merged.
+ *   `Venue.stopIds` several stops may serve the same football venue. NOT
+ *                   merged — the venue simply gets more than one stop.
+ *
+ * A label is only listed as an alias when the source shows it is the same
+ * place. When that cannot be decided from the timetable, the stops stay
+ * separate and the open question is recorded in `venue.unresolved`.
  */
 
 /** @typedef {{id: string, name: string, aliases?: string[]}} StopConfig */
-/** @typedef {{id: string, name: string, stopId: string, note?: string}} VenueConfig */
+/**
+ * @typedef {{
+ *   id: string,
+ *   name: string,
+ *   stopIds: string[],
+ *   note?: string,
+ *   unresolved?: string,
+ * }} VenueConfig
+ */
 
 /** @type {StopConfig[]} */
 export const STOPS = [
@@ -21,22 +36,32 @@ export const STOPS = [
   {
     id: 'hedens-ip',
     name: 'Högastensskolan / Hedens IP',
+    // "Högasten" (linje 11) är samma namn förkortat till stadsdelen;
+    // "Högastensskolan" (linje 13, 21) är skolan i samma stadsdel.
     aliases: ['Högasten / Hedens IP'],
   },
   { id: 'attekulla-ip', name: 'Ättekulla IP' },
   { id: 'vastra-ramlosa-skola', name: 'Västra Ramlösa Skola' },
+
+  // --- Harlyckan: två hållplatsnamn, se VENUES nedan ---------------------
   {
-    id: 'harlyckan-ip',
+    id: 'elinebergsplatsen',
     name: 'Elinebergsplatsen / Harlyckan IP',
-    // The PDF uses three different spellings for the Harlyckan stop.
-    // "Elinebergsplansen" is a typo; "Elinebergskyrkan" is a nearby landmark.
-    // All three are treated as one stop — see README, "Kända oklarheter".
-    aliases: [
-      'Elinebergsplatsen Harlyckan IP',
-      'Elinebergsplansen / Harlyckan IP',
-      'Elinebergskyrkan Harlyckan IP',
-    ],
+    // "Elinebergsplansen" skiljer sig med en bokstav från "Elinebergsplatsen",
+    // är inte ett ortnamn på svenska, och har exakt samma grannhållplatser och
+    // körtider (Västra Ramlösa Skola 4 min på både linje 11 och 13/14).
+    // Det är en felstavning, inte en annan hållplats.
+    aliases: ['Elinebergsplatsen Harlyckan IP', 'Elinebergsplansen / Harlyckan IP'],
   },
+  {
+    id: 'elinebergskyrkan',
+    name: 'Elinebergskyrkan / Harlyckan IP',
+    // Elinebergskyrkan är ett eget landmärke, inte en stavning av
+    // Elinebergsplatsen. Tidtabellen likställer dem aldrig — se
+    // venue "harlyckan-ip".
+    aliases: ['Elinebergskyrkan Harlyckan IP'],
+  },
+
   { id: 'wieselgrensskolan', name: 'Wieselgrensskolan' },
   { id: 'husensjoskolan', name: 'Husensjöskolan' },
   { id: 'gustavslundsskolan', name: 'Gustavslundsskolan' },
@@ -82,26 +107,52 @@ export const STOPS = [
  * @type {VenueConfig[]}
  */
 export const VENUES = [
-  { id: 'norrvalla-ip', name: 'Norrvalla IP', stopId: 'norrvalla-ip' },
-  { id: 'olympia', name: 'Olympia', stopId: 'olympiaskolan', note: 'Hållplats Olympiaskolan' },
-  { id: 'filborna-ip', name: 'Filborna IP', stopId: 'filborna-ip', note: 'Hållplats Filbornaskolan' },
+  { id: 'norrvalla-ip', name: 'Norrvalla IP', stopIds: ['norrvalla-ip'] },
+  { id: 'olympia', name: 'Olympia', stopIds: ['olympiaskolan'], note: 'Hållplats Olympiaskolan' },
+  {
+    id: 'filborna-ip',
+    name: 'Filborna IP',
+    stopIds: ['filborna-ip'],
+    note: 'Hållplats Filbornaskolan',
+  },
   {
     id: 'vastergard-ip',
     name: 'Västergård IP',
-    stopId: 'vastergard-ip',
+    stopIds: ['vastergard-ip'],
     note: 'Hållplats Adolfsberg, ca 300 m promenad',
   },
-  { id: 'harlyckan-ip', name: 'Harlyckans IP', stopId: 'harlyckan-ip', note: 'Hållplats Elinebergsplatsen' },
-  { id: 'hedens-ip', name: 'Hedens IP', stopId: 'hedens-ip', note: 'Hållplats Högastensskolan' },
-  { id: 'attekulla-ip', name: 'Ättekulla IP', stopId: 'attekulla-ip' },
-  { id: 'raa-ip', name: 'Råå IP', stopId: 'raa-ip' },
-  { id: 'orby-ip', name: 'Örby IP', stopId: 'orby-ip' },
-  { id: 'rydeback-ip', name: 'Rydebäck IP', stopId: 'rydeback-ip' },
-  { id: 'maria-park-ip', name: 'Maria Park IP', stopId: 'maria-park' },
-  { id: 'larods-ip', name: 'Laröds IP', stopId: 'larods-ip' },
-  { id: 'allerums-ip', name: 'Allerums IP', stopId: 'allerums-ip' },
-  { id: 'toftavallen', name: 'Toftavallen', stopId: 'odakra-toftavallen', note: 'Hållplats Spritan, Ödåkra' },
-  { id: 'morarp-vidablick-ip', name: 'Mörarp Vidablick IP', stopId: 'morarp-vidablick-ip' },
+  {
+    id: 'harlyckan-ip',
+    name: 'Harlyckans IP',
+    stopIds: ['elinebergsplatsen', 'elinebergskyrkan'],
+    note: 'Två hållplatsnamn i tidtabellen',
+    unresolved:
+      'Tidtabellen använder två olika hållplatsnamn för Harlyckans IP: ' +
+      '"Elinebergsplatsen" (linje 11, 13, 14, 17) och "Elinebergskyrkan" (linje 12, 21). ' +
+      'Det går inte att avgöra ur underlaget om det är samma fysiska hållplats. ' +
+      'De hålls därför isär, och ett byte mellan dem planeras inte som ett bussbyte ' +
+      'utan kräver att du går. Kontrollera med arrangören.',
+  },
+  {
+    id: 'hedens-ip',
+    name: 'Hedens IP',
+    stopIds: ['hedens-ip'],
+    note: 'Hållplats Högastensskolan',
+  },
+  { id: 'attekulla-ip', name: 'Ättekulla IP', stopIds: ['attekulla-ip'] },
+  { id: 'raa-ip', name: 'Råå IP', stopIds: ['raa-ip'] },
+  { id: 'orby-ip', name: 'Örby IP', stopIds: ['orby-ip'] },
+  { id: 'rydeback-ip', name: 'Rydebäck IP', stopIds: ['rydeback-ip'] },
+  { id: 'maria-park-ip', name: 'Maria Park IP', stopIds: ['maria-park'] },
+  { id: 'larods-ip', name: 'Laröds IP', stopIds: ['larods-ip'] },
+  { id: 'allerums-ip', name: 'Allerums IP', stopIds: ['allerums-ip'] },
+  {
+    id: 'toftavallen',
+    name: 'Toftavallen',
+    stopIds: ['odakra-toftavallen'],
+    note: 'Hållplats Spritan, Ödåkra',
+  },
+  { id: 'morarp-vidablick-ip', name: 'Mörarp Vidablick IP', stopIds: ['morarp-vidablick-ip'] },
 ]
 
 /**

@@ -20,16 +20,24 @@ export interface BusConnection {
   serviceId?: string
 }
 
-/** A football venue and the stop it is served from. */
+/**
+ * A football venue and the stops it is served from.
+ *
+ * More than one stop is allowed: the timetable sometimes names two different
+ * stops for the same pitch. Those stops are kept apart rather than merged, and
+ * the open question is recorded in `unresolved`.
+ */
 export interface Venue {
   id: string
   name: string
-  stopId: string
+  stopIds: string[]
   address?: string
   latitude?: number
   longitude?: number
   /** Free-text hint, e.g. "Hållplats Adolfsberg, ca 300 m promenad". */
   note?: string
+  /** Set when it is unclear whether the venue's stops are the same place. */
+  unresolved?: string
 }
 
 export interface Stop {

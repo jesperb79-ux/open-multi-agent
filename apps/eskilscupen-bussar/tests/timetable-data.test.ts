@@ -40,7 +40,10 @@ describe('importerad tidtabell', () => {
   it('kopplar varje fotbollsplan till en trafikerad hållplats', () => {
     expect(validateData()).toEqual([])
     for (const venue of venues) {
-      expect(connections.some((c) => c.fromStop === venue.stopId || c.toStop === venue.stopId)).toBe(true)
+      expect(venue.stopIds.length).toBeGreaterThan(0)
+      for (const stopId of venue.stopIds) {
+        expect(connections.some((c) => c.fromStop === stopId || c.toStop === stopId)).toBe(true)
+      }
     }
   })
 
@@ -57,8 +60,8 @@ describe('reseplanering på riktig tidtabellsdata', () => {
   const search = (originStop: string, destinationStop: string, earliestDeparture: string, serviceId = 'fre-lor') =>
     findJourneys({ connections, originStop, destinationStop, earliestDeparture, serviceId })
 
-  it('hittar en direktresa Harlyckan → Olympia', () => {
-    const [journey] = search('harlyckan-ip', 'olympiaskolan', '13:00')
+  it('hittar en direktresa Harlyckan (Elinebergsplatsen) → Olympia', () => {
+    const [journey] = search('elinebergsplatsen', 'olympiaskolan', '13:00')
     expect(journey.transfers).toBe(0)
     expect(journey.legs[0].routeId).toBeDefined()
     expect(parseTime(journey.departureTime)).toBeGreaterThanOrEqual(parseTime('13:00'))
