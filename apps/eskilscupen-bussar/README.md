@@ -34,11 +34,19 @@ npm run import         # läs om PDF:en och skriv om JSON-filerna
 `./` i `vite.config.ts`, så bygget fungerar både från domänroten och från en
 underkatalog.
 
-| Tjänst | Inställning |
-| --- | --- |
-| GitHub Pages | Publicera innehållet i `dist/` (t.ex. via `actions/deploy-pages`) |
-| Netlify | Base directory `apps/eskilscupen-bussar`, build `npm run build`, publish `dist` |
-| Vercel | Root directory `apps/eskilscupen-bussar`, framework **Vite** |
+Färdiga konfigurationsfiler finns för båda tjänsterna:
+
+| Tjänst | Fil | Vad som behövs |
+| --- | --- | --- |
+| Netlify | `netlify.toml` | Koppla repot. Base directory, byggkommando och publiceringsmapp läses ur filen. |
+| Vercel | `vercel.json` | Koppla repot och sätt **Root Directory** till `apps/eskilscupen-bussar`. Resten läses ur filen. |
+| GitHub Pages | – | Publicera innehållet i `dist/` (t.ex. via `actions/deploy-pages`). |
+
+Bygget är helt statiskt och består av fyra filer: `index.html`, en hashad JS-
+och CSS-fil samt `favicon.svg`. Alla sökvägar i `index.html` är relativa, så
+sidan fungerar lika bra från domänroten som från en underkatalog. Båda
+konfigurationerna har en katch-all-rewrite till `index.html`, så en direktlänk
+eller omladdning av vilken sökväg som helst landar rätt.
 
 ## Projektstruktur
 

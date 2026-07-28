@@ -91,11 +91,6 @@ input[type='time'] {
   min-height: 44px;
 }
 
-.row {
-  display: flex;
-  gap: 0.75rem;
-}
-
 .swap {
   align-self: flex-end;
   background: none;
@@ -330,6 +325,12 @@ input[type='time'] {
   margin-top: 2rem;
   font-size: 0.78rem;
   color: var(--muted);
+}
+
+.app-foot .disclaimer {
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
+  margin-bottom: 0.6rem;
 }
 
 @media (min-width: 480px) {

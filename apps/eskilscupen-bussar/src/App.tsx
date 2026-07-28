@@ -158,21 +158,22 @@ export default function App() {
 
         <PlaceSelect id="destination" label="Till" value={destination} onChange={setDestination} />
 
-        <div className="row">
-          <div className="field">
-            <label htmlFor="date">Cupdag {TOURNAMENT_YEAR}</label>
-            <select id="date" value={date} onChange={(event) => setDate(event.target.value)}>
-              {tournamentDates.map((day) => (
-                <option key={day.date} value={day.date}>
-                  {tournamentDateLabel(day)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="field">
-            <label htmlFor="time">Tidigast avgång</label>
-            <input id="time" type="time" value={time} onChange={(event) => setTime(event.target.value)} />
-          </div>
+        {/* Egen rad vardera: "Söndag 2 augusti 2026" ryms inte i ett halvbrett
+            fält på 375–430 px och skulle klippas av. */}
+        <div className="field">
+          <label htmlFor="date">Cupdag {TOURNAMENT_YEAR}</label>
+          <select id="date" value={date} onChange={(event) => setDate(event.target.value)}>
+            {tournamentDates.map((day) => (
+              <option key={day.date} value={day.date}>
+                {tournamentDateLabel(day)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="field">
+          <label htmlFor="time">Tidigast avgång</label>
+          <input id="time" type="time" value={time} onChange={(event) => setTime(event.target.value)} />
         </div>
 
         <p className="service-note">
@@ -233,6 +234,10 @@ export default function App() {
       </section>
 
       <footer className="app-foot">
+        <p className="disclaimer">
+          Reseplaneraren bygger på Eskilscupens publicerade busstidtabell. Kontrollera alltid
+          skyltning och information från cuporganisationen vid förändringar.
+        </p>
         <p>
           Tidtabell: {timetable.trips.length} turer på {timetable.routes.length} linjer, inläst från{' '}
           {timetable.source.file}. Endast avgångar ur cupens officiella tidtabell visas.
