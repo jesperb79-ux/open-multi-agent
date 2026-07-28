@@ -34,17 +34,20 @@ function main() {
     matches
       .filter((m) => m.type === type)
       .map((m) =>
-        `| ${cell(m.appName)} | ${cell(m.officialName)} | ${m.type === 'venue' ? 'Spelplats' : 'Hållplats'} | ` +
-        `${cell(m.matchedName ?? m.query)} | – | ${m.confidence} | ${STATUS_LABEL[m.verificationStatus]} | ` +
-        `${m.sourceUrls.map((u) => (u.startsWith('http') ? `[källa](${u})` : `\`${u}\``)).join(', ')} | ` +
+        `| ${cell(m.appName)} | ${cell(m.mapName)} | ${m.type === 'venue' ? 'Spelplats' : 'Hållplats'} | ` +
+        `${cell(m.mapCell)} | ${cell(m.landmark)} | ${cell(m.matchedName)} | \`${cell(m.query)}\` | ` +
+        `${m.confidence} | ${STATUS_LABEL[m.verificationStatus]} | ` +
         `${cell(m.reasoning)}${m.notes ? ' ' + m.notes.join(' ') : ''} |`,
       )
 
   const header =
-    '| Appnamn | Officiellt namn | Typ | Google Maps-träff | Koordinat | Confidence | Status | Källa | Kommentar |\n' +
-    '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
+    '| Appnamn | Kartans namn | Typ | Kartcell | Landmärke | Google Maps-mål | Sökfras | Confidence | Status | Kommentar |\n' +
+    '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'
 
-  const manual = matches.filter((m) => m.verificationStatus === 'unverified')
+  const manual = matches.filter(
+    (m) => m.verificationStatus !== 'verified-against-official-map' || m.confidence !== 'high',
+  )
+  const noLink = matches.filter((m) => m.verificationStatus === 'unverified' || m.confidence === 'low')
 
   const out = [
     '# Google Maps — verifieringsrapport',
@@ -63,9 +66,22 @@ function main() {
     '',
     `> ${doc.note}`,
     '',
-    '## Kräver manuell kontroll',
+    `Kartan är märkt 2025. Arrangören använder samma underlag för 2026, men linje 17 har lagts om: ` +
+      `kartan kör den till Höganäs och Lerberget, 2026 års tidtabell till Mörarp.`,
     '',
-    ...manual.map((m) => `- **${m.appName}** (${m.type === 'venue' ? 'spelplats' : 'hållplats'}) — ${m.reasoning}`),
+    '## Utan länk i appen',
+    '',
+    ...(noLink.length
+      ? noLink.map((m) => `- **${m.appName}** (${m.type === 'venue' ? 'spelplats' : 'hållplats'}) — ${m.reasoning}`)
+      : ['- Inga.']),
+    '',
+    '## Kräver manuell kontroll på plats',
+    '',
+    ...manual.map(
+      (m) =>
+        `- **${m.appName}** (${m.type === 'venue' ? 'spelplats' : 'hållplats'}, ${m.confidence}) — ` +
+        `${m.notes ? m.notes.join(' ') : m.reasoning}`,
+    ),
     '',
     '## Spelplatser',
     '',

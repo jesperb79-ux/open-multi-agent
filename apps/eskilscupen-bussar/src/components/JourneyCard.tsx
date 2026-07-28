@@ -63,7 +63,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   <span className="route">{routeName(leg.routeId)}</span> från{' '}
                   <strong>{stopName(leg.fromStop)}</strong>
-                  {legIndex === 0 && <MapsLinks id={leg.fromStop} kind="stop" variant="navigate" />}
+                  {legIndex === 0 && <MapsLinks id={leg.fromStop} kind="stop" />}
                 </span>
               </p>
 
@@ -94,7 +94,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   Ankomst <strong>{stopName(leg.toStop)}</strong>
                   {legIndex === journey.legs.length - 1 && (
-                    <MapsLinks id={leg.toStop} kind="stop" variant="navigate" />
+                    <MapsLinks id={leg.toStop} kind="stop" />
                   )}
                 </span>
               </p>

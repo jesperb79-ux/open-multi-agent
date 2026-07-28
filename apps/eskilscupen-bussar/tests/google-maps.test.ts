@@ -1,15 +1,17 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { timetable, venues } from '../src/data/timetable'
+import { connections, timetable, venues } from '../src/data/timetable'
+import { findJourneys } from '../src/planner/findJourneys'
+import type { Journey } from '../src/types'
 import { parseMapsFlag } from '../src/maps/feature-flag'
 import matchesDocument from '../data/google-maps-matches.json'
 import {
-  APPROXIMATE_NOTICE,
+  SIGNAGE_NOTICE,
   googleMapsLocations,
   isVerifiedAgainstOfficialMap,
   mapsLocationForStop,
   mapsLocationForVenue,
-  needsApproximateNotice,
+  needsSignageNotice,
 } from '../src/config/googleMapsLocations'
 import {
   EXTERNAL_LINK_ATTRIBUTES,
@@ -70,9 +72,9 @@ describe('söklänk', () => {
     expect(paramsOf(mapsSearchUrl(larod!.query)).get('query')).toBe(larod!.query)
   })
 
-  it('en hållplats får en söklänk med sin egen sökfras', () => {
+  it('en hållplats får en sökfras ur kartans namn', () => {
     const stop = mapsLocationForStop('filborna-ip')
-    expect(stop?.query).toBe('Filbornaskolan, Helsingborg, Sverige')
+    expect(stop?.query).toBe('Filborna IP, Helsingborg, Sverige')
     expect(paramsOf(mapsSearchUrl(stop!.query)).get('query')).toBe(stop!.query)
   })
 
@@ -130,29 +132,57 @@ describe('Harlyckans två hållplatser', () => {
 })
 
 describe('säkerhetsnivå och verifiering', () => {
-  it('allt som inte är high får en reservation', () => {
-    for (const location of googleMapsLocations) {
-      expect(needsApproximateNotice(location), location.id).toBe(location.confidence !== 'high')
+  it('en fullt belagd plats får ingen reservation', () => {
+    const larod = mapsLocationForVenue('larods-ip')!
+    expect(larod.verificationStatus).toBe('verified-against-official-map')
+    expect(larod.confidence).toBe('high')
+    expect(needsSignageNotice(larod)).toBe(false)
+  })
+
+  it('en plats som bara är sannolik får reservationen', () => {
+    // Ödåkra/Toftavallen heter olika på kartan 2025 och i tidtabellen 2026.
+    const odakra = mapsLocationForStop('odakra-toftavallen')!
+    expect(odakra.verificationStatus).toBe('probable')
+    expect(needsSignageNotice(odakra)).toBe(true)
+  })
+
+  it('en medelsäker sökfras får reservationen även när läget är belagt', () => {
+    for (const id of ['barslov', 'gantofta', 'glumslov', 'flygfaltet']) {
+      const stop = mapsLocationForStop(id)!
+      expect(stop.verificationStatus, id).toBe('verified-against-official-map')
+      expect(stop.confidence, id).toBe('medium')
+      expect(needsSignageNotice(stop), id).toBe(true)
     }
   })
 
   it('reservationstexten är den efterfrågade', () => {
-    expect(APPROXIMATE_NOTICE).toBe('Placeringen är ungefärlig, kontrollera skyltning på plats.')
+    expect(SIGNAGE_NOTICE).toBe('Kontrollera skyltning på plats.')
   })
 
-  it('ingen plats påstås verifierad mot Eskilscupens karta', () => {
-    // Kartan gick inte att läsa — se docs/map-source-audit.md.
-    for (const location of googleMapsLocations) {
-      expect(isVerifiedAgainstOfficialMap(location), location.id).toBe(false)
-    }
+  it('de flesta platser är nu belagda mot kartan', () => {
+    const verified = googleMapsLocations.filter(isVerifiedAgainstOfficialMap)
+    expect(verified.length).toBe(googleMapsLocations.length - 1)
   })
 
-  it('obekräftade platser visas inte i appen', () => {
-    const hidden = allMatches.filter((m) => m.verificationStatus === 'unverified')
+  it('obekräftade och lågt bedömda platser visas inte i appen', () => {
+    const hidden = allMatches.filter(
+      (m) => m.verificationStatus === 'unverified' || m.confidence === 'low',
+    )
     expect(hidden.length).toBeGreaterThan(0)
     for (const match of hidden) {
       const lookup = match.type === 'venue' ? mapsLocationForVenue : mapsLocationForStop
       expect(lookup(match.id), match.id).toBeUndefined()
+    }
+    // Mörarp Vidablick IP saknas helt på kartan och får därför ingen knapp.
+    expect(mapsLocationForVenue('morarp-vidablick-ip')).toBeUndefined()
+    expect(mapsLocationForStop('morarp-vidablick-ip')).toBeUndefined()
+  })
+
+  it('varje visad plats är kontrollerad mot en kartcell', () => {
+    for (const location of googleMapsLocations) {
+      const match = allMatches.find((m) => m.id === location.id && m.type === location.type)!
+      expect(match.mapCell, location.id).toBeTruthy()
+      expect(match.landmark, location.id).toBeTruthy()
     }
   })
 
@@ -164,10 +194,18 @@ describe('säkerhetsnivå och verifiering', () => {
     }
   })
 
-  it('gränssnittet visar reservationen i stället för att påstå verifiering', () => {
+  it('gränssnittet visar reservationen där den behövs', () => {
     const source = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
-    expect(source).toContain('needsApproximateNotice(location)')
-    expect(source).toContain('APPROXIMATE_NOTICE')
+    expect(source).toContain('needsSignageNotice(location)')
+    expect(source).toContain('SIGNAGE_NOTICE')
+  })
+
+  it('gränssnittet har bara Navigera-knappen', () => {
+    const source = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
+    expect(source).toContain('>\n        Navigera\n      </a>')
+    expect(source).not.toContain('Visa i Google Maps')
+    // Bara en länk per plats.
+    expect((source.match(/<a\b/g) ?? []).length).toBe(1)
   })
 })
 
@@ -177,25 +215,26 @@ describe('täckning', () => {
     expect(allMatches.filter((m) => m.type === 'bus-stop')).toHaveLength(timetable.stops.length)
   })
 
-  it('en verifierad spelplats får båda länkarna', () => {
+  it('en verifierad spelplats får en Navigera-länk', () => {
     const larod = mapsLocationForVenue('larods-ip')
-    expect(larod?.showUrl).toContain('/maps/search/')
+    expect(larod?.verificationStatus).toBe('verified-against-official-map')
     expect(larod?.directionsUrl).toContain('/maps/dir/')
     expect(paramsOf(larod!.directionsUrl).get('travelmode')).toBe('walking')
   })
 
-  it('en verifierad hållplats får båda länkarna', () => {
+  it('en verifierad hållplats får en Navigera-länk', () => {
     const stop = mapsLocationForStop('filborna-ip')
-    expect(stop?.query).toBe('Filbornaskolan, Helsingborg, Sverige')
-    expect(stop?.showUrl).toContain('/maps/search/')
+    expect(stop?.verificationStatus).toBe('verified-against-official-map')
+    // Kartans H-symbol heter "Filborna IP", inte Filbornaskolan.
+    expect(stop?.query).toBe('Filborna IP, Helsingborg, Sverige')
     expect(stop?.directionsUrl).toContain('/maps/dir/')
   })
 
   it('en plats utan konfiguration ger ingen länk att rendera', () => {
     expect(mapsLocationForVenue('finns-inte')).toBeUndefined()
     expect(mapsLocationForStop('finns-inte')).toBeUndefined()
-    // Även en obekräftad plats saknar konfiguration i appen.
-    expect(mapsLocationForStop('flygfaltet')).toBeUndefined()
+    // Mörarp saknas på kartan och har därför ingen konfiguration heller.
+    expect(mapsLocationForStop('morarp-vidablick-ip')).toBeUndefined()
     const source = readFileSync(new URL('../src/maps/MapsLinks.tsx', import.meta.url), 'utf8')
     expect(source).toContain('if (!location) return null')
   })
@@ -214,6 +253,7 @@ describe('sökfraserna', () => {
     expect(mapsLocationForVenue('allerums-ip')?.query).toContain('Allerum')
     expect(mapsLocationForVenue('rydeback-ip')?.query).toContain('Rydebäck')
     expect(mapsLocationForVenue('toftavallen')?.query).toContain('Ödåkra')
+    expect(mapsLocationForStop('paarp-medevi')?.query).toContain('Påarp')
   })
 
   it('hittar inte på gatuadresser', () => {
@@ -223,9 +263,19 @@ describe('sökfraserna', () => {
   })
 
   it('rättar stavfel som finns i tidtabellen', () => {
-    // PDF:en skriver "Norvalla" och "Vätergård".
+    // PDF:en skriver "Norvalla" och "Vätergård"; kartan skriver rätt.
     expect(mapsLocationForStop('norrvalla-ip')?.query).toContain('Norrvalla')
     expect(mapsLocationForVenue('vastergard-ip')?.query).toContain('Västergård')
+  })
+
+  it('följer kartans namn där det skiljer sig från tidtabellens', () => {
+    // Kartan: Olympiafältet, Ryavallen, Medevi IP, Stendösvallen, Bållevi IP.
+    expect(mapsLocationForVenue('olympia')?.query).toContain('Olympiafältet')
+    expect(mapsLocationForVenue('allerums-ip')?.query).toContain('Ryavallen')
+    expect(mapsLocationForStop('paarp-medevi')?.query).toContain('Medevi IP')
+    expect(mapsLocationForStop('gantofta')?.query).toContain('Stendösvallen')
+    expect(mapsLocationForStop('barslov')?.query).toContain('Bållevi IP')
+    expect(mapsLocationForStop('glumslov')?.query).toContain('Glumslövs IP')
   })
 })
 
@@ -273,9 +323,7 @@ describe('kartlänkarna påverkar inte resealgoritmen', () => {
     expect(planner).not.toMatch(/from '\.\.?\/(maps|config)/)
   })
 
-  it('samma sökning ger samma resa oavsett kartlänkarna', async () => {
-    const { connections } = await import('../src/data/timetable')
-    const { findJourneys } = await import('../src/planner/findJourneys')
+  it('samma sökning ger samma resa oavsett kartlänkarna', () => {
     const query = {
       connections,
       originStop: 'rydeback-ip',
@@ -288,5 +336,67 @@ describe('kartlänkarna påverkar inte resealgoritmen', () => {
     googleMapsLocations.forEach((l) => [l.showUrl, l.directionsUrl])
     expect(findJourneys(query)).toEqual(before)
     expect(before[0].departureTime).toBe('06:30')
+  })
+})
+
+/**
+ * Riktiga resor ur den importerade tidtabellen. För varje resa kontrolleras
+ * att hållplatserna som faktiskt visas i resekortet också har en Navigera-länk,
+ * och att en plats utan belagt läge inte får någon.
+ */
+describe('Navigera-länkar på riktiga resor', () => {
+  const journeyFor = (originStop: string, destinationStop: string, time: string, serviceId: string) =>
+    findJourneys({ connections, originStop, destinationStop, earliestDeparture: time, serviceId })[0]
+
+  /** Hållplatserna som gränssnittet sätter en länk vid: start, byten och mål. */
+  const linkedStops = (journey: Journey): string[] => [
+    journey.legs[0].fromStop,
+    ...journey.transfersDetail.map((t) => t.stopId),
+    journey.legs[journey.legs.length - 1].toStop,
+  ]
+
+  const cases: [string, string, string, string, string][] = [
+    ['Laröds IP → Filborna IP', 'larods-ip', 'filborna-ip', '10:00', 'fre-lor'],
+    ['Rydebäck IP → Olympia', 'rydeback-ip', 'olympiaskolan', '06:00', 'fre-lor'],
+    ['Ättekulla IP → Västergård IP', 'attekulla-ip', 'vastergard-ip', '14:00', 'sondag'],
+    ['via Harlyckan (Elinebergsplatsen)', 'elinebergsplatsen', 'larods-ip', '13:00', 'fre-lor'],
+    ['via Flygfältet', 'flygfaltet', 'norrvalla-ip', '08:00', 'sondag'],
+    ['via Glumslöv', 'glumslov', 'norrvalla-ip', '09:00', 'fre-lor'],
+    ['via Bårslöv', 'barslov', 'norrvalla-ip', '09:00', 'sondag'],
+    ['via Gantofta', 'gantofta', 'norrvalla-ip', '09:00', 'sondag'],
+  ]
+
+  for (const [name, from, to, time, service] of cases) {
+    it(`${name} — varje visad hållplats har en Navigera-länk`, () => {
+      const journey = journeyFor(from, to, time, service)
+      expect(journey, name).toBeDefined()
+      for (const stopId of linkedStops(journey)) {
+        const location = mapsLocationForStop(stopId)
+        expect(location, `${name}: ${stopId}`).toBeDefined()
+        expect(location!.directionsUrl).toContain('/maps/dir/')
+        expect(paramsOf(location!.directionsUrl).get('travelmode')).toBe('walking')
+        expect(paramsOf(location!.directionsUrl).get('origin')).toBeNull()
+      }
+    })
+  }
+
+  it('en resa till Mörarp får ingen länk vid slutmålet', () => {
+    const journey = journeyFor('norrvalla-ip', 'morarp-vidablick-ip', '07:00', 'sondag')
+    expect(journey).toBeDefined()
+    expect(journey.legs.at(-1)!.toStop).toBe('morarp-vidablick-ip')
+    // Läget saknas på kartan, så ingen knapp visas.
+    expect(mapsLocationForStop('morarp-vidablick-ip')).toBeUndefined()
+    // Men startplatsen har en.
+    expect(mapsLocationForStop(journey.legs[0].fromStop)).toBeDefined()
+  })
+
+  it('Harlyckan använder den hållplats resan faktiskt går från', () => {
+    const platsen = journeyFor('elinebergsplatsen', 'larods-ip', '13:00', 'fre-lor')
+    expect(platsen.legs[0].fromStop).toBe('elinebergsplatsen')
+    expect(mapsLocationForStop('elinebergsplatsen')!.query).toContain('Elinebergsplatsen')
+
+    const kyrkan = journeyFor('norrvalla-ip', 'elinebergskyrkan', '13:00', 'sondag')
+    expect(kyrkan.legs.at(-1)!.toStop).toBe('elinebergskyrkan')
+    expect(mapsLocationForStop('elinebergskyrkan')!.query).toContain('Elinebergskyrkan')
   })
 })

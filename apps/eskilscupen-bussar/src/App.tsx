@@ -304,11 +304,11 @@ export default function App() {
               <dl className="venue-maps">
                 <dt>{originPlace.label}</dt>
                 <dd>
-                  <MapsLinks id={venueIdOf(originPlace.key)} kind="venue" variant="navigate" />
+                  <MapsLinks id={venueIdOf(originPlace.key)} kind="venue" />
                 </dd>
                 <dt>{destinationPlace.label}</dt>
                 <dd>
-                  <MapsLinks id={venueIdOf(destinationPlace.key)} kind="venue" variant="navigate" />
+                  <MapsLinks id={venueIdOf(destinationPlace.key)} kind="venue" />
                 </dd>
               </dl>
             )}

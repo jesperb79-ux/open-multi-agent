@@ -34,8 +34,8 @@ export interface GoogleMapsLocation {
   note?: string
 }
 
-/** Texten användaren får när placeringen inte är säker. */
-export const APPROXIMATE_NOTICE = 'Placeringen är ungefärlig, kontrollera skyltning på plats.'
+/** Texten användaren får när läget inte är fullt belagt på kartan. */
+export const SIGNAGE_NOTICE = 'Kontrollera skyltning på plats.'
 
 interface RawMatch {
   id: string
@@ -51,8 +51,13 @@ interface RawMatch {
 
 const SHOWN: GoogleMapsVerificationStatus[] = ['verified-against-official-map', 'probable']
 
-const isShown = (status: string): status is GoogleMapsVerificationStatus =>
-  (SHOWN as string[]).includes(status)
+/**
+ * Vilka platser som får visas: läget ska vara belagt på kartan eller åtminstone
+ * sannolikt, och sökfrasen får inte vara en gissning. `unverified` och `low`
+ * filtreras bort — hellre ingen knapp än en som leder fel.
+ */
+const isShown = (raw: { verificationStatus: string; confidence: string }): boolean =>
+  (SHOWN as string[]).includes(raw.verificationStatus) && raw.confidence !== 'low'
 
 /**
  * Destinationen för navigeringslänken.
@@ -84,7 +89,7 @@ function build(raw: RawMatch): GoogleMapsLocation {
 
 /** Alla platser som får visas i appen. */
 export const googleMapsLocations: GoogleMapsLocation[] = (matches.matches as RawMatch[])
-  .filter((raw) => isShown(raw.verificationStatus))
+  .filter(isShown)
   .map(build)
 
 const byKey = new Map(googleMapsLocations.map((location) => [`${location.type}:${location.id}`, location]))
@@ -98,13 +103,14 @@ export const mapsLocationForStop = (stopId: string): GoogleMapsLocation | undefi
   byKey.get(`bus-stop:${stopId}`)
 
 /**
- * Behöver placeringen en reservation?
+ * Behöver läget en reservation i gränssnittet?
  *
- * Allt som inte är `high` får texten i {@link APPROXIMATE_NOTICE}. En medelsäker
- * träff pekar på rätt område men inte nödvändigtvis på hållplatsläget.
+ * Sant så snart kartan inte entydigt belägger hållplatsläget, eller när
+ * sökfrasen bara pekar på rätt område. Cupens hållplatser är ofta tillfälliga
+ * och saknar permanent skylt, så exakt vägkant går sällan att läsa ur kartan.
  */
-export const needsApproximateNotice = (location: GoogleMapsLocation): boolean =>
-  location.confidence !== 'high'
+export const needsSignageNotice = (location: GoogleMapsLocation): boolean =>
+  location.verificationStatus !== 'verified-against-official-map' || location.confidence !== 'high'
 
 /**
  * Är platsen kontrollerad mot Eskilscupens officiella karta?
