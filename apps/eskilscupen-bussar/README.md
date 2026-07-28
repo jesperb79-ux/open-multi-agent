@@ -287,24 +287,34 @@ Två genererade filer finns för manuell granskning:
   båda kolumnerna i dubblettgrupper.
 * `data/journey-checks.md` — kontrollrapporten ovan.
 
-## Kartfunktionen (prototyp, avstängd)
+## Google Maps-länkar (prototyp, avstängd)
 
-Kartan ligger bakom en feature flag och är **av** som standard:
+Funktionen ligger bakom en feature flag och är **av** som standard:
 
 ```bash
-VITE_ENABLE_MAPS=false   # standard — appen fungerar precis som utan kartan
-VITE_ENABLE_MAPS=true    # visar kartprototypen
+VITE_ENABLE_MAPS=false   # standard — appen fungerar precis som utan länkarna
+VITE_ENABLE_MAPS=true    # visar "Navigera hit" och "Visa i Google Maps"
 ```
 
-Är flaggan av importeras kartmodulerna aldrig, så webbläsaren hämtar inte en
-byte av dem.
+Appen bygger bara adresser som användaren själv klickar på. Ingen inbyggd
+karta, ingen iframe, inget kartbibliotek, ingen API-nyckel, ingen
+platsbehörighet och ingen bakgrundshämtning från Google.
 
-Prototypen ritar bara ut platser vars position är **kontrollerad mot
-primärkälla**. I dag är det inga alls — se `docs/map-source-audit.md`. Platser
-med osäker eller okänd position listas som "position ej bekräftad" utan att
-placeras någonstans. Inga externa karttjänster, brickor, nycklar eller
-betaltjänster används; kartan är en egen SVG och länkar vidare via `geo:`-URI
-till användarens egen kartapp.
+Kedjan från plats till länk:
+
+```bash
+npm run maps            # kör alla tre stegen nedan
+npm run maps:candidates # data/map-candidates.json — alla planer och hållplatser
+npm run maps:matches    # data/google-maps-matches.json — sökfras och bedömning
+npm run maps:report     # docs/google-maps-verification-report.md
+```
+
+Varje plats bär en bedömning. `unverified` visas inte alls — hellre ingen länk
+än en som pekar på ortens mittpunkt när användaren tror att den pekar på
+hållplatsen. Allt som inte är `high` får texten "Placeringen är ungefärlig,
+kontrollera skyltning på plats." Ingen plats är ännu kontrollerad mot
+Eskilscupens officiella karta; se `docs/map-source-audit.md` och
+`docs/google-maps-verification-report.md`.
 
 ## Vad som medvetet inte finns med
 

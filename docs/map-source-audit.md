@@ -37,29 +37,63 @@ positioner**, och inga koordinater alls har kunnat samlas in.
 
 ---
 
-## Källor
+## Källinventering
 
-### Identifierade primärkällor (inte lästa härifrån)
+Kolumnen **Läst** skiljer källor som verkligen hämtats från sådana som bara
+framkommit som sökträffar. Ingen uppgift från en oläst källa får behandlas som
+bekräftad.
 
-| Källa | URL | Innehåll | Status |
-| --- | --- | --- | --- |
-| Eskilscupen, Spelplaner (Adress, GPS) | `https://www.eskilscupen.nu/sv/spelplaner-adress-gps` | **Adress och GPS per spelplan** — exakt det som behövs | 403 |
-| Eskilscupen, Spelplaner och kartor | `https://www.eskilscupen.nu/spelplaner-kartor` | Kartöversikt | 403 |
-| Eskilscupen, officiell karta 2025 (PDF) | `https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf` | Översiktskarta över cupens område | 403 |
-| Eskilscupen, Skolor (Adress, GPS) | `https://eskilscupen.nu/sv/skolor-adress-gps` | Skolor som används som förläggning | 403 |
-| Helsingborgs stad, Fotbollsplaner | `https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/` | Kommunens anläggningsregister med adress per plan | 403 |
+### Eskilscupens egna källor
 
-Eskilscupens egen GPS-sida är den källa som bör användas, av två skäl: den
-kommer från arrangören som faktiskt bestämmer var matcherna spelas, och den
-anger positionen för *spelplanen*, inte för anläggningens postadress. Skillnaden
-spelar roll på stora anläggningar — Norrvalla har flera planer utspridda över
-området.
+| Titel | URL | Typ | År | Innehåll | Läst | Osäkerhet |
+| --- | --- | --- | --- | --- | --- | --- |
+| Spelplaner (Adress, GPS) | `https://www.eskilscupen.nu/sv/spelplaner-adress-gps` | Webbsida | 2026 | Adress och GPS per spelplan — **den avgörande källan** | Nej, 403 | Hela innehållet okänt |
+| Spelplaner och kartor | `https://www.eskilscupen.nu/spelplaner-kartor` | Webbsida | 2026 | Kartöversikt per spelplats | Nej, 403 | Hela innehållet okänt |
+| Eskilscupen karta 2025 | `https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf` | Kart-PDF | **2025** | Översiktskarta över cupområdet med zonindelning | Nej, 403 | **Föregående års karta.** Zoner och hållplatslägen kan ha ändrats till 2026 |
+| Skolor (Adress, GPS) | `https://eskilscupen.nu/sv/skolor-adress-gps` | Webbsida | 2026 | Förläggningsskolor med adress och GPS | Nej, 403 | Gäller boende, inte spelplatser |
+| Resultatsystemets platssidor | `https://eskilscupen.nu/<år>,sv/result/places/<id>` | Webbsida | 2019–2024 | Enskilda planer med zonbeteckning, t.ex. Norrvalla C3, Harlyckan C4 | Nej, 403 | Äldre årgångar; zonbeteckningarna kan vara inaktuella |
+| Om turneringen | `https://eskilscupen.nu/sv/om-turneringen` | Webbsida | 2026 | 80 planer, 28 transferbussar | Via sökträff | Endast översiktlig |
 
-### Källor som gick att nå
+### Kommunala och kollektivtrafikkällor
 
-Endast webbsökning. Resultaten är sammanfattningar genererade ur sidorna, inte
-sidornas eget innehåll. De kan innehålla fel i sifferuppgifter och har därför
-lägsta konfidens.
+| Titel | URL | Typ | År | Innehåll | Läst | Osäkerhet |
+| --- | --- | --- | --- | --- | --- | --- |
+| Fotbollsplaner, Helsingborgs stad | `https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/` | Anläggningsregister | 2026 | Adress per idrottsplats | Nej, 403 | Adresser hämtade via sökträffar, ej lästa i primärkällan |
+| Helsingborg stadstrafik, linjenätskarta | `https://www.skanetrafiken.se/globalassets/kartor/linjekartor/helsingborg_linjenatskarta.pdf` | Kart-PDF | 2026 | Ordinarie hållplatser i stadstrafiken | Nej, 403 | Visar inte cupens tillfälliga hållplatser |
+| Moovit, hållplats Elinebergsplatsen | `https://moovitapp.com/index/sv/offentlig_transit-Helsingborg_Elinebergsplatsen-Stockholm-stop_402353017-1083` | Kollektivtrafikdata | 2026 | Hållplatsen som egen post | Via sökträff | Tredjepartsdata, inte officiell |
+| Moovit, hållplats Elinebergskyrkan | `https://moovitapp.com/index/sv/offentlig_transit-Helsingborg_Elinebergskyrkan-Stockholm-stop_402304015-1083` | Kollektivtrafikdata | 2026 | Hållplatsen som egen post, **257 m från Elinebergsplatsen** | Via sökträff | Tredjepartsdata, inte officiell |
+| Spritan, Spritfabriken i Ödåkra | `https://spritan.com/` | Besöksmål | 2026 | Landmärket som hållplatsen "Spritan" är namngiven efter | Via sökträff | Säger inget om hållplatsläget |
+| Norrvalla, Helsingborgs stadslexikon | `https://stadslexikon.helsingborg.se/norrvalla/` | Uppslagsverk | 2026 | Anläggningens historia och läge | Via sökträff | Beskrivande, inte kartografiskt |
+
+### Egen källa
+
+| Titel | Sökväg | Typ | År | Innehåll | Läst | Osäkerhet |
+| --- | --- | --- | --- | --- | --- | --- |
+| Busslinjer Eskilscupen 2026 | `data/busslinjer2026eskilscupen.pdf` | Tidtabells-PDF | **2026** | Alla linjer, turer och hållplatsnamn | **Ja, fullt inläst** | Innehåller inga koordinater, adresser eller hållplatslägen |
+
+Tidtabells-PDF:en är den enda källan som lästs i sin helhet. Allt annat bygger
+på sökträffar.
+
+### Vad som avgjordes trots begränsningarna
+
+**Elinebergsplatsen och Elinebergskyrkan är två skilda hållplatser.** Båda finns
+som egna poster i kollektivtrafikdata, och avståndet mellan dem anges till
+257 m — ungefär fyra minuters promenad. Det stöder beslutet att hålla dem isär,
+som appen redan gjorde på andra grunder. Kyrkans klocktorn uppges vara byggt
+samman med hållplatsen, vilket gör det läget entydigt.
+
+**"Påarp Medevi" syftar på Medevi IP i Påarp**, vilket gör sökfrasen betydligt
+träffsäkrare än enbart ortnamnet.
+
+**"Spritan" är den gamla spritfabriken i Ödåkra**, i dag ett namngivet
+besöksmål och därmed ett användbart landmärke för hållplatsen.
+
+### Varför just Eskilscupens GPS-sida
+
+Den är den källa som bör användas, av två skäl: den kommer från arrangören som
+faktiskt bestämmer var matcherna spelas, och den anger positionen för
+*spelplanen*, inte för anläggningens postadress. Skillnaden spelar roll på stora
+anläggningar — Norrvalla har flera planer utspridda över området.
 
 ### Källor som medvetet valts bort
 

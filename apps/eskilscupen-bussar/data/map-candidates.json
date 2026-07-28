@@ -1,0 +1,600 @@
+{
+  "generatedFrom": "scripts/stop-config.mjs",
+  "counts": {
+    "total": 43,
+    "venues": 15,
+    "busStops": 28,
+    "withOfficialName": 10,
+    "withAliases": 22
+  },
+  "candidates": [
+    {
+      "id": "norrvalla-ip",
+      "appName": "Norrvalla IP",
+      "officialName": "Norrvalla IP",
+      "type": "venue",
+      "aliases": [
+        "Norrvalla IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "mapReference": "C3"
+    },
+    {
+      "id": "olympia",
+      "appName": "Olympia",
+      "officialName": "Olympia",
+      "type": "venue",
+      "aliases": [
+        "Olympiaskolan"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "notes": [
+        "Hållplats Olympiaskolan"
+      ]
+    },
+    {
+      "id": "filborna-ip",
+      "appName": "Filborna IP",
+      "officialName": "Filborna IP",
+      "type": "venue",
+      "aliases": [
+        "Filbornaskolan / Filborna IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "notes": [
+        "Hållplats Filbornaskolan"
+      ]
+    },
+    {
+      "id": "vastergard-ip",
+      "appName": "Västergård IP",
+      "officialName": "Västergårds IP",
+      "type": "venue",
+      "aliases": [
+        "Adolfsberg (Västergård IP 300 m)"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "notes": [
+        "Hållplats Adolfsberg, ca 300 m promenad"
+      ]
+    },
+    {
+      "id": "harlyckan-ip",
+      "appName": "Harlyckans IP",
+      "officialName": "Harlyckans IP",
+      "type": "venue",
+      "aliases": [
+        "Elinebergsplatsen / Harlyckan IP",
+        "Elinebergskyrkan / Harlyckan IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "mapReference": "C4",
+      "notes": [
+        "Två hållplatsnamn i tidtabellen",
+        "Tidtabellen använder två olika hållplatsnamn för Harlyckans IP: \"Elinebergsplatsen\" (linje 11, 13, 14, 17) och \"Elinebergskyrkan\" (linje 12, 21). Det går inte att avgöra ur underlaget om det är samma fysiska hållplats. De hålls därför isär, och ett byte mellan dem planeras inte som ett bussbyte utan kräver att du går. Kontrollera med arrangören.",
+        "Nås från 2 hållplatser: elinebergsplatsen, elinebergskyrkan."
+      ]
+    },
+    {
+      "id": "hedens-ip",
+      "appName": "Hedens IP",
+      "type": "venue",
+      "aliases": [
+        "Högastensskolan / Hedens IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "notes": [
+        "Hållplats Högastensskolan"
+      ]
+    },
+    {
+      "id": "attekulla-ip",
+      "appName": "Ättekulla IP",
+      "officialName": "Ättekulla IP",
+      "type": "venue",
+      "aliases": [
+        "Ättekulla IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "raa-ip",
+      "appName": "Råå IP",
+      "type": "venue",
+      "aliases": [
+        "Råå IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "orby-ip",
+      "appName": "Örby IP",
+      "type": "venue",
+      "aliases": [
+        "Örby IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "rydeback-ip",
+      "appName": "Rydebäck IP",
+      "officialName": "Rydebäcks IP",
+      "type": "venue",
+      "aliases": [
+        "Rydebäck IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "maria-park-ip",
+      "appName": "Maria Park IP",
+      "officialName": "Maria Park IP",
+      "type": "venue",
+      "aliases": [
+        "Maria Park"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "larods-ip",
+      "appName": "Laröds IP",
+      "officialName": "Laröds IP",
+      "type": "venue",
+      "aliases": [
+        "Laröds IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "allerums-ip",
+      "appName": "Allerums IP",
+      "officialName": "Allerums IP",
+      "type": "venue",
+      "aliases": [
+        "Allerums IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "toftavallen",
+      "appName": "Toftavallen",
+      "type": "venue",
+      "aliases": [
+        "Spritan, Ödåkra Fabriksgatan – Toftavallen"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025,
+      "notes": [
+        "Hållplats Spritan, Ödåkra"
+      ]
+    },
+    {
+      "id": "morarp-vidablick-ip",
+      "appName": "Mörarp Vidablick IP",
+      "type": "venue",
+      "aliases": [
+        "Mörarp Vidablick IP"
+      ],
+      "sourceUrls": [
+        "https://www.eskilscupen.nu/sv/spelplaner-adress-gps",
+        "https://www.eskilscupen.nu/spelplaner-kartor",
+        "https://static.cupmanager.net/uploads/8/y/0C4/eskilscupen-karta-2025.pdf"
+      ],
+      "sourceYear": 2025
+    },
+    {
+      "id": "glumslov",
+      "appName": "Glumslöv",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "rydeback-ip",
+      "appName": "Rydebäck IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Rydebäck IP."
+      ]
+    },
+    {
+      "id": "orby-ip",
+      "appName": "Örby IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Örby IP."
+      ]
+    },
+    {
+      "id": "raa-ip",
+      "appName": "Råå IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Råå IP."
+      ]
+    },
+    {
+      "id": "hedens-ip",
+      "appName": "Högastensskolan / Hedens IP",
+      "type": "bus-stop",
+      "aliases": [
+        "Högasten / Hedens IP"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Hedens IP."
+      ]
+    },
+    {
+      "id": "attekulla-ip",
+      "appName": "Ättekulla IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Ättekulla IP."
+      ]
+    },
+    {
+      "id": "vastra-ramlosa-skola",
+      "appName": "Västra Ramlösa Skola",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "elinebergsplatsen",
+      "appName": "Elinebergsplatsen / Harlyckan IP",
+      "type": "bus-stop",
+      "aliases": [
+        "Elinebergsplatsen Harlyckan IP",
+        "Elinebergsplansen / Harlyckan IP"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Harlyckans IP.",
+        "Planen nås från flera hållplatser som inte är utredda."
+      ]
+    },
+    {
+      "id": "elinebergskyrkan",
+      "appName": "Elinebergskyrkan / Harlyckan IP",
+      "type": "bus-stop",
+      "aliases": [
+        "Elinebergskyrkan Harlyckan IP"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Harlyckans IP.",
+        "Planen nås från flera hållplatser som inte är utredda."
+      ]
+    },
+    {
+      "id": "wieselgrensskolan",
+      "appName": "Wieselgrensskolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "husensjoskolan",
+      "appName": "Husensjöskolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "gustavslundsskolan",
+      "appName": "Gustavslundsskolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "vastergard-ip",
+      "appName": "Adolfsberg (Västergård IP 300 m)",
+      "type": "bus-stop",
+      "aliases": [
+        "Adolfsberg (Vätergård IP 300m)"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Västergård IP."
+      ]
+    },
+    {
+      "id": "filborna-ip",
+      "appName": "Filbornaskolan / Filborna IP",
+      "type": "bus-stop",
+      "aliases": [
+        "Filbornaskolan/Filborna IP"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Filborna IP."
+      ]
+    },
+    {
+      "id": "olympiaskolan",
+      "appName": "Olympiaskolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Olympia."
+      ]
+    },
+    {
+      "id": "tagaborgsskolan",
+      "appName": "Tågaborgsskolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "norrvalla-ip",
+      "appName": "Norrvalla IP",
+      "type": "bus-stop",
+      "aliases": [
+        "Norvalla IP"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Norrvalla IP."
+      ]
+    },
+    {
+      "id": "barslov",
+      "appName": "Bårslöv",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "gantofta",
+      "appName": "Gantofta",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "paarp-medevi",
+      "appName": "Påarp Medevi",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "morarp-vidablick-ip",
+      "appName": "Mörarp Vidablick IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Mörarp Vidablick IP."
+      ]
+    },
+    {
+      "id": "flygfaltet",
+      "appName": "Flygfältet (Vattentornet)",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "maria-park",
+      "appName": "Maria Park",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Maria Park IP."
+      ]
+    },
+    {
+      "id": "larods-ip",
+      "appName": "Laröds IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Laröds IP."
+      ]
+    },
+    {
+      "id": "scandic-nord",
+      "appName": "Scandic Nord",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    },
+    {
+      "id": "allerums-ip",
+      "appName": "Allerums IP",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Allerums IP."
+      ]
+    },
+    {
+      "id": "odakra-toftavallen",
+      "appName": "Spritan, Ödåkra Fabriksgatan – Toftavallen",
+      "type": "bus-stop",
+      "aliases": [
+        "Spritan, Ödåkra Fabriksgatan - Toftavallen"
+      ],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026,
+      "notes": [
+        "Betjänar Toftavallen."
+      ]
+    },
+    {
+      "id": "ronnowska-skolan",
+      "appName": "Rönnowska skolan",
+      "type": "bus-stop",
+      "aliases": [],
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "sourceYear": 2026
+    }
+  ]
+}

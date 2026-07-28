@@ -443,60 +443,48 @@ input[type='time'] {
   }
 }
 
-/* ---------------------------------------------------------------- karta */
 
-.map-panel {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0.9rem 1rem 1rem;
-  margin-top: 1rem;
+/* ------------------------------------------------- google maps-länkar */
+
+.maps-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  margin-left: 0.5rem;
 }
 
-.map-title {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  color: var(--green-dark);
+.maps-link {
+  font-size: 0.78rem;
+  color: var(--green);
+  text-decoration: underline;
+  white-space: nowrap;
 }
 
-.map-note {
-  margin: 0;
-  font-size: 0.85rem;
+.maps-link-primary {
+  font-weight: 600;
+}
+
+.maps-approximate {
+  flex-basis: 100%;
+  font-size: 0.72rem;
   color: var(--muted);
 }
 
-.map-canvas {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  background: var(--bg);
-  border-radius: 8px;
-}
-
-.map-dot {
-  fill: var(--green);
-}
-
-.map-label {
-  font-size: 4px;
-  fill: var(--ink);
-}
-
-.map-list {
-  margin: 0.6rem 0 0;
-  padding-left: 1.1rem;
+.venue-maps {
+  margin: 0.75rem 0 0;
   font-size: 0.85rem;
 }
 
-.map-unverified {
-  margin-top: 0.75rem;
-  padding-top: 0.6rem;
-  border-top: 1px solid var(--line);
-  font-size: 0.82rem;
+.venue-maps dt {
+  font-weight: 600;
   color: var(--muted);
 }
 
-.map-unverified ul {
-  margin: 0.35rem 0 0;
-  padding-left: 1.1rem;
+.venue-maps dd {
+  margin: 0.1rem 0 0.5rem;
+}
+
+.venue-maps .maps-links {
+  margin-left: 0;
 }

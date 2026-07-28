@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { routeName, stopName } from '../data/timetable'
+import { MapsLinks } from '../maps/MapsLinks'
 import { formatDuration } from '../planner/time'
 import type { Journey } from '../types'
 
@@ -53,6 +54,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                   </span>
                   Byte vid <strong>{stopName(transfer.stopId)}</strong> ·{' '}
                   {plural(transfer.waitMinutes, 'minut', 'minuter')} väntetid
+                  <MapsLinks id={transfer.stopId} kind="stop" />
                 </p>
               )}
 
@@ -61,6 +63,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   <span className="route">{routeName(leg.routeId)}</span> från{' '}
                   <strong>{stopName(leg.fromStop)}</strong>
+                  {legIndex === 0 && <MapsLinks id={leg.fromStop} kind="stop" variant="navigate" />}
                 </span>
               </p>
 
@@ -90,6 +93,9 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 </span>
                 <span className="step-body">
                   Ankomst <strong>{stopName(leg.toStop)}</strong>
+                  {legIndex === journey.legs.length - 1 && (
+                    <MapsLinks id={leg.toStop} kind="stop" variant="navigate" />
+                  )}
                 </span>
               </p>
             </li>
