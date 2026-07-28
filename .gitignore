@@ -6,3 +6,5 @@ coverage/
 docs/*
 # Kartunderlaget är handskrivet och ska följa med i repot.
 !docs/map-source-audit.md
+# Checklistan fylls i för hand och måste därför versionshanteras.
+!docs/bus-stop-manual-verification.md
