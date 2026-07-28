@@ -6,6 +6,8 @@ export interface Place {
   key: string
   label: string
   stopId: string
+  /** Spelplatsen, när platsen är en sådan. Målet för den sista gångsträckan. */
+  venueId?: string
   group: 'Fotbollsplaner' | 'Övriga hållplatser'
   note?: string
   /** Open question about which physical stop serves this venue. */
@@ -28,6 +30,7 @@ export const places: Place[] = [
           key: `venue:${venue.id}@${stopId}`,
           label: served.length > 1 ? `${venue.name} – ${stopName(stopId)}` : venue.name,
           stopId,
+          venueId: venue.id,
           group: 'Fotbollsplaner',
           note: venue.note,
           unresolved: venue.unresolved,

@@ -296,7 +296,12 @@ export default function App() {
               </p>
             )}
             {result.journeys.map((journey, index) => (
-              <JourneyCard key={journeyKey(searchId, index, journey)} journey={journey} index={index} />
+              <JourneyCard
+                key={journeyKey(searchId, index, journey)}
+                journey={journey}
+                index={index}
+                destinationVenueId={destinationPlace?.venueId}
+              />
             ))}
           </>
         )}

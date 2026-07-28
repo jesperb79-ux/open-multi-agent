@@ -13,7 +13,13 @@
     "test:watch": "vitest",
     "import": "node scripts/import-timetable.mjs",
     "verify:import": "node scripts/verify-import.mjs",
-    "verify:journeys": "vitest run tests/journey-checks.test.ts"
+    "verify:journeys": "vitest run tests/journey-checks.test.ts",
+    "maps:candidates": "node scripts/build-map-candidates.mjs",
+    "maps:matches": "node scripts/build-google-maps-matches.mjs",
+    "maps:report": "node scripts/build-map-report.mjs",
+    "maps": "npm run maps:candidates && npm run maps:matches && npm run maps:report",
+    "stops:sheet": "node scripts/build-stop-verification-sheet.mjs",
+    "stops:apply": "node scripts/apply-verified-bus-stops.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

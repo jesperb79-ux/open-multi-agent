@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { routeName, stopName } from '../data/timetable'
+import { journeyLinks, linkKey } from '../maps/journey-links'
+import { MapsLinks } from '../maps/MapsLinks'
 import { formatDuration } from '../planner/time'
 import type { Journey } from '../types'
 
@@ -11,7 +13,21 @@ function timeWithDayMark(time: string, minutes: number, departureMinutes: number
   return days > 0 ? `${time} +${days}` : time
 }
 
-export function JourneyCard({ journey, index }: { journey: Journey; index: number }) {
+export function JourneyCard({
+  journey,
+  index,
+  destinationVenueId,
+}: {
+  journey: Journey
+  index: number
+  /** Spelplatsen resenären valt, när målet är en sådan. */
+  destinationVenueId?: string
+}) {
+  // Hållplats under resan, spelplats först på slutet — och inga dubbletter.
+  const links = useMemo(
+    () => journeyLinks(journey, destinationVenueId),
+    [journey, destinationVenueId],
+  )
   const [expandedLegs, setExpandedLegs] = useState<number[]>([])
   const toggleLeg = (legIndex: number) =>
     setExpandedLegs((current) =>
@@ -53,6 +69,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                   </span>
                   Byte vid <strong>{stopName(transfer.stopId)}</strong> ·{' '}
                   {plural(transfer.waitMinutes, 'minut', 'minuter')} väntetid
+                  <MapsLinks location={links.get(linkKey('transfer', transfer.stopId))} />
                 </p>
               )}
 
@@ -61,6 +78,7 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 <span className="step-body">
                   <span className="route">{routeName(leg.routeId)}</span> från{' '}
                   <strong>{stopName(leg.fromStop)}</strong>
+                  {legIndex === 0 && <MapsLinks location={links.get(linkKey('start', leg.fromStop))} />}
                 </span>
               </p>
 
@@ -90,12 +108,28 @@ export function JourneyCard({ journey, index }: { journey: Journey; index: numbe
                 </span>
                 <span className="step-body">
                   Ankomst <strong>{stopName(leg.toStop)}</strong>
+                  {legIndex === journey.legs.length - 1 && (
+                    <MapsLinks location={links.get(linkKey('destination', leg.toStop))} />
+                  )}
                 </span>
               </p>
             </li>
           )
         })}
       </ol>
+
+      {/* Bussresan är slut — nu, och först nu, gäller spelplatsen. Raden
+          visas bara när planen ligger någon annanstans än hållplatsen. */}
+      {destinationVenueId && links.has(linkKey('venue', destinationVenueId)) && (
+        <p className="final-walk">
+          <span className="final-walk-icon" aria-hidden="true">
+            ⇥
+          </span>
+          Sista biten till fots till{' '}
+          <strong>{links.get(linkKey('venue', destinationVenueId))!.label}</strong>
+          <MapsLinks location={links.get(linkKey('venue', destinationVenueId))} />
+        </p>
+      )}
     </article>
   )
 }

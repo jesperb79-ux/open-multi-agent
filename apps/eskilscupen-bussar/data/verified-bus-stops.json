@@ -1,0 +1,14 @@
+{
+  "note": "Manuellt verifierade busshållplatslägen. Fyll i enligt docs/bus-stop-manual-verification.md och kör npm run stops:apply. Tomt register betyder att inget ännu är verifierat — appen använder då sina nuvarande navigeringsmål.",
+  "model": {
+    "<stopId>": {
+      "googleMapsUrl": "Länk kopierad från Google Maps, eller utelämnad om lat/lng anges",
+      "latitude": "Decimalgrader, t.ex. 56.043210. Utelämnas om googleMapsUrl anges",
+      "longitude": "Decimalgrader, t.ex. 12.712345",
+      "classification": "exact-public-transit-stop | exact-cup-stop | probable-cup-stop | unverified",
+      "verified": "true — annars avvisas posten",
+      "note": "Vad som kontrollerades, t.ex. mot vilken H-markering"
+    }
+  },
+  "stops": {}
+}

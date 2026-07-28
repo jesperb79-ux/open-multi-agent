@@ -1,0 +1,861 @@
+{
+  "generatedFrom": "data/map-candidates.json",
+  "note": "Kontrollerad mot data/eskilscupen-karta-2025.pdf — kartcell ur indexlistan och rosa H-symbol för cupens busshållplatser. Se docs/map-pdf-analysis.md.",
+  "counts": {
+    "total": 43,
+    "venues": {
+      "verified": 14,
+      "probable": 0,
+      "unverified": 1,
+      "rejected": 0
+    },
+    "busStops": {
+      "verified": 26,
+      "probable": 1,
+      "unverified": 1,
+      "rejected": 0
+    }
+  },
+  "matches": [
+    {
+      "id": "norrvalla-ip",
+      "type": "venue",
+      "appName": "Norrvalla IP",
+      "officialName": "Norrvalla IP",
+      "query": "Norrvalla IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Norrvalla+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Norrvalla IP",
+      "mapName": "Norrvalla IP, Helsingborg",
+      "mapCell": "C3",
+      "mapStop": "Norrvalla IP",
+      "landmark": "Berga, norr om Ringstorpsskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Kartan visar grön spelplats \"Norrvalla IP\" i C3 med en H-hållplats med samma namn intill. Trafikeras av linjerna 11–20."
+    },
+    {
+      "id": "olympia",
+      "type": "venue",
+      "appName": "Olympia",
+      "officialName": "Olympia",
+      "query": "Olympiafältet, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Olympiaf%C3%A4ltet%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Olympiafältet",
+      "mapName": "Olympiafältet, Helsingborg",
+      "mapCell": "C3",
+      "mapStop": "Olympiaskolan",
+      "landmark": "Idrottens Hus / Arenan, Slottshagen",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartan kallar spelplatsen \"Olympiafältet\", inte Olympia. Sökfrasen är ändrad till kartans namn, vilket pekar på planerna i stället för på arenan. Hållplatsen är Olympiaskolan strax söder om."
+    },
+    {
+      "id": "filborna-ip",
+      "type": "venue",
+      "appName": "Filborna IP",
+      "officialName": "Filborna IP",
+      "query": "Filborna IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filborna+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Filborna IP",
+      "mapName": "Filborna IP, Helsingborg",
+      "mapCell": "C3 D3",
+      "mapStop": "Filborna IP",
+      "landmark": "Filbornaskolan, Nanny Palmkvistskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Grön spelplats \"Filborna IP\" i C3 D3 med H-hållplats med samma namn vid Filbornaskolan."
+    },
+    {
+      "id": "vastergard-ip",
+      "type": "venue",
+      "appName": "Västergård IP",
+      "officialName": "Västergårds IP",
+      "query": "Västergårds IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=V%C3%A4sterg%C3%A5rds+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Västergårds IP",
+      "mapName": "Västergårds IP, Helsingborg",
+      "mapCell": "D4",
+      "mapStop": "Västergårds IP",
+      "landmark": "Västergårdshallen, Adolfsberg",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartan skriver \"Västergårds IP, Helsingborg, D4 ... (300 m)\". Tidtabellens stavning \"Vätergård\" är alltså fel. H-hållplatsen ligger väster om planerna, vilket förklarar de 300 metrarna.",
+      "notes": [
+        "Kartan anger uttryckligen 300 m mellan hållplats och plan."
+      ]
+    },
+    {
+      "id": "harlyckan-ip",
+      "type": "venue",
+      "appName": "Harlyckans IP",
+      "officialName": "Harlyckans IP",
+      "query": "Harlyckans IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Harlyckans+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Harlyckans IP",
+      "mapName": "Harlyckans IP, Helsingborg",
+      "mapCell": "C4",
+      "mapStop": "Elinebergsplatsen / Elinebergskyrkan",
+      "landmark": "Harlyckehallen, Elinebergsskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Grön spelplats \"Harlyckans IP\" i C4 intill Harlyckehallen. Ingen egen H-symbol — planen nås från Elinebergsplatsen och Elinebergskyrkan, som ligger som två skilda H strax söder om.",
+      "notes": [
+        "Kartan bekräftar att planen har två skilda hållplatser."
+      ]
+    },
+    {
+      "id": "hedens-ip",
+      "type": "venue",
+      "appName": "Hedens IP",
+      "query": "Hedens IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hedens+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Hedens IP",
+      "mapName": "Hedens IP, Helsingborg",
+      "mapCell": "C5",
+      "mapStop": "Hedens IP",
+      "landmark": "Högastenshallen, Högastensskolan, Norrehedshallen",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Grön spelplats \"Hedens IP\" i C5 med H-hållplats med samma namn, intill Högastenshallen och Högastensskolan."
+    },
+    {
+      "id": "attekulla-ip",
+      "type": "venue",
+      "appName": "Ättekulla IP",
+      "officialName": "Ättekulla IP",
+      "query": "Ättekulla IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=%C3%84ttekulla+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Ättekulla IP",
+      "mapName": "Ättekulla IP, Helsingborg",
+      "mapCell": "D5",
+      "mapStop": "Ättekulla IP",
+      "landmark": "Ättekullaskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Grön spelplats \"Ättekulla IP\" i D5 med H-hållplats med samma namn vid Ättekullaskolan."
+    },
+    {
+      "id": "raa-ip",
+      "type": "venue",
+      "appName": "Råå IP",
+      "query": "Råå IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=R%C3%A5%C3%A5+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Råå IP",
+      "mapName": "Råå IP, C5 D5",
+      "mapCell": "C5 D5",
+      "mapStop": "Råå IP",
+      "landmark": "Råå vallar, söder om Hedens IP",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Grön spelplats \"Råå IP\" i C5 D5 med H-hållplats med samma namn."
+    },
+    {
+      "id": "orby-ip",
+      "type": "venue",
+      "appName": "Örby IP",
+      "query": "Örby IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=%C3%96rby+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Örby IP",
+      "mapName": "Örby Kropp IP, D6",
+      "mapCell": "D6",
+      "mapStop": "Örby IP",
+      "landmark": "Örby ängar, Pålstorp",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartans indexlista skriver \"Örby Kropp IP, D6\" medan H-hållplatsen bara heter \"Örby IP\". Läget är belagt, men Google känner sannolikt inte det längre namnet, så sökfrasen följer hållplatsens namn.",
+      "notes": [
+        "H-symbolen ligger några hundra meter norr om den gröna spelplatsen."
+      ]
+    },
+    {
+      "id": "rydeback-ip",
+      "type": "venue",
+      "appName": "Rydebäck IP",
+      "officialName": "Rydebäcks IP",
+      "query": "Rydebäcks IP, Rydebäck, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rydeb%C3%A4cks+IP%2C+Rydeb%C3%A4ck%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Rydebäcks IP",
+      "mapName": "Rydebäcks IP, E7",
+      "mapCell": "E7",
+      "mapStop": "Rydebäcks IP",
+      "landmark": "Rydebäcksskolan, Rydebäckshallarna",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Grön spelplats \"Rydebäcks IP\" i E7 med H-hållplats med samma namn vid Rydebäcksskolan."
+    },
+    {
+      "id": "maria-park-ip",
+      "type": "venue",
+      "appName": "Maria Park IP",
+      "officialName": "Maria Park IP",
+      "query": "Maria Park fotbollsplan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Maria+Park+fotbollsplan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Maria Park fotbollsplan",
+      "mapName": "Maria Park fotbollsplan, C2",
+      "mapCell": "C2",
+      "mapStop": "Maria Park IP",
+      "landmark": "Maria Parkskolan, Kullavägen, Mariahallen",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartan kallar planen \"Maria Park fotbollsplan\" i C2. H-hållplatsen heter \"Maria Park IP\" och ligger vid Maria Parkskolan / Kullavägen."
+    },
+    {
+      "id": "larods-ip",
+      "type": "venue",
+      "appName": "Laröds IP",
+      "officialName": "Laröds IP",
+      "query": "Laröds IP, Laröd, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lar%C3%B6ds+IP%2C+Lar%C3%B6d%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Laröds IP",
+      "mapName": "Laröds IP, A1 B1",
+      "mapCell": "A1 B1",
+      "mapStop": "Laröds IP",
+      "landmark": "Hittarpshallen, Laröds skola",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Grön spelplats \"Laröds IP\" i A1 B1 med H-hållplats med samma namn."
+    },
+    {
+      "id": "allerums-ip",
+      "type": "venue",
+      "appName": "Allerums IP",
+      "officialName": "Allerums IP",
+      "query": "Ryavallen, Allerum, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ryavallen%2C+Allerum%2C+Sverige",
+      "matchedName": "Ryavallen",
+      "mapName": "Ryavallen, Allerum, C1",
+      "mapCell": "C1",
+      "mapStop": "Allerums IP",
+      "landmark": "Allerum",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartan kallar anläggningen \"Ryavallen, Allerum\" i C1 medan H-hållplatsen heter \"Allerums IP\". Sökfrasen använder kartans namn, som är anläggningens riktiga.",
+      "notes": [
+        "Tidtabellens \"Allerums IP\" är hållplatsens namn, inte planens."
+      ]
+    },
+    {
+      "id": "toftavallen",
+      "type": "venue",
+      "appName": "Toftavallen",
+      "query": "Toftavallen, Ödåkra, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Toftavallen%2C+%C3%96d%C3%A5kra%2C+Sverige",
+      "matchedName": "Toftavallen",
+      "mapName": "Toftavallen, Ödåkra, D1",
+      "mapCell": "D1",
+      "mapStop": "Toftavallen / Gläntanskolan",
+      "landmark": "Gläntanskolan, Ödåkra station",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Grön spelplats \"Toftavallen\" i D1 med H-hållplatsen \"Toftavallen Gläntanskolan\" intill. Att Toftavallen ligger i Ödåkra är därmed belagt."
+    },
+    {
+      "id": "morarp-vidablick-ip",
+      "type": "venue",
+      "appName": "Mörarp Vidablick IP",
+      "query": "Vidablick IP, Mörarp, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Vidablick+IP%2C+M%C3%B6rarp%2C+Sverige",
+      "confidence": "low",
+      "verificationStatus": "unverified",
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "reasoning": "Mörarp finns inte alls på 2025 års karta — varken orten, anläggningen eller någon H-symbol. Kartans linje 17 gick 2025 till Höganäs och Lerberget, medan 2026 års tidtabell kör linje 17 till Mörarp. Läget går alltså inte att belägga ur det här underlaget.",
+      "notes": [
+        "Linje 17 har lagts om mellan 2025 och 2026. Kräver uppgift från arrangören."
+      ]
+    },
+    {
+      "id": "glumslov",
+      "type": "bus-stop",
+      "appName": "Glumslöv",
+      "query": "Glumslövs IP, Glumslöv, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Glumsl%C3%B6vs+IP%2C+Glumsl%C3%B6v%2C+Sverige",
+      "matchedName": "Glumslövs IP",
+      "mapName": "Glumslövs IP, E8",
+      "mapCell": "E8",
+      "mapStop": "Glumslöv",
+      "landmark": "Glumslövs IP, Glumslöv station",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbolen \"Glumslöv\" ligger vid den gröna spelplatsen \"Glumslövs IP\" i E8, inte i ortens mitt. Sökfrasen pekar därför på idrottsplatsen.",
+      "notes": [
+        "Cupspecifik hållplats. Exakt vägkant framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "rydeback-ip",
+      "type": "bus-stop",
+      "appName": "Rydebäck IP",
+      "query": "Rydebäcks IP, Rydebäck, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rydeb%C3%A4cks+IP%2C+Rydeb%C3%A4ck%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Rydebäcks IP",
+      "mapName": "Rydebäcks IP, E7",
+      "mapCell": "E7",
+      "mapStop": "Rydebäcks IP",
+      "landmark": "Rydebäcksskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Rydebäcks IP\" vid den gröna spelplatsen i E7."
+    },
+    {
+      "id": "orby-ip",
+      "type": "bus-stop",
+      "appName": "Örby IP",
+      "query": "Örby IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=%C3%96rby+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Örby IP",
+      "mapName": "Örby Kropp IP, D6",
+      "mapCell": "D6",
+      "mapStop": "Örby IP",
+      "landmark": "Örby ängar",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Örby IP\" i D6, norr om den gröna spelplatsen.",
+      "notes": [
+        "Hållplatsen ligger en bit från planen."
+      ]
+    },
+    {
+      "id": "raa-ip",
+      "type": "bus-stop",
+      "appName": "Råå IP",
+      "query": "Råå IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=R%C3%A5%C3%A5+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Råå IP",
+      "mapName": "Råå IP, C5 D5",
+      "mapCell": "C5 D5",
+      "mapStop": "Råå IP",
+      "landmark": "Råå vallar",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Råå IP\" vid den gröna spelplatsen i C5 D5."
+    },
+    {
+      "id": "hedens-ip",
+      "type": "bus-stop",
+      "appName": "Högastensskolan / Hedens IP",
+      "query": "Högastensskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=H%C3%B6gastensskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Högastensskolan",
+      "mapName": "Hedens IP, Helsingborg, C5",
+      "mapCell": "C5",
+      "mapStop": "Hedens IP",
+      "landmark": "Högastenshallen, Hedens IP",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/kommunala-grundskolor/hogastensskolan/"
+      ],
+      "reasoning": "Kartans H-symbol i C5 heter \"Hedens IP\", men 2026 års tidtabell kallar hållplatsen \"Högastensskolan / Hedens IP\". Under bussresan gäller hållplatsen: sökfrasen pekar på skolan, som är ett namngivet landmärke intill planen. Spelplatsen Hedens IP har en egen post och används för den sista gångsträckan.",
+      "notes": [
+        "Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "attekulla-ip",
+      "type": "bus-stop",
+      "appName": "Ättekulla IP",
+      "query": "Ättekulla IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=%C3%84ttekulla+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Ättekulla IP",
+      "mapName": "Ättekulla IP, D5",
+      "mapCell": "D5",
+      "mapStop": "Ättekulla IP",
+      "landmark": "Ättekullaskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Ättekulla IP\" vid den gröna spelplatsen i D5."
+    },
+    {
+      "id": "vastra-ramlosa-skola",
+      "type": "bus-stop",
+      "appName": "Västra Ramlösa Skola",
+      "query": "Västra Ramlösa skola, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=V%C3%A4stra+Raml%C3%B6sa+skola%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Västra Ramlösa skola",
+      "mapName": "Västra Ramlösa skola, D4",
+      "mapCell": "D4",
+      "mapStop": "Västra Ramlösa Skola",
+      "landmark": "Ramlösagården, Eskilsminne",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i D4."
+    },
+    {
+      "id": "elinebergsplatsen",
+      "type": "bus-stop",
+      "appName": "Elinebergsplatsen / Harlyckan IP",
+      "query": "Elinebergsplatsen, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Elinebergsplatsen%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Elinebergsplatsen",
+      "mapName": "Elinebergsplatsen",
+      "mapCell": "C4",
+      "mapStop": "Elinebergsplatsen",
+      "landmark": "Elinebergsskolan, Harlyckehallen",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://moovitapp.com/index/sv/offentlig_transit-Helsingborg_Elinebergsplatsen-Stockholm-stop_402353017-1083"
+      ],
+      "reasoning": "Kartan visar två skilda H-symboler i C4: \"Elinebergsplatsen\" väster om Elinebergsskolan och \"Elinebergskyrkan\" öster om. De är alltså två hållplatser, inte en.",
+      "notes": [
+        "Hålls isär från Elinebergskyrkan. Slå inte ihop dem."
+      ]
+    },
+    {
+      "id": "elinebergskyrkan",
+      "type": "bus-stop",
+      "appName": "Elinebergskyrkan / Harlyckan IP",
+      "query": "Elinebergskyrkan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Elinebergskyrkan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Elinebergskyrkan",
+      "mapName": "Elinebergskyrkan",
+      "mapCell": "C4",
+      "mapStop": "Elinebergskyrkan",
+      "landmark": "Elinebergsskolan",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://moovitapp.com/index/sv/offentlig_transit-Helsingborg_Elinebergskyrkan-Stockholm-stop_402304015-1083"
+      ],
+      "reasoning": "Egen H-symbol i C4, tydligt skild från Elinebergsplatsen. Kollektivtrafikdata anger 257 m mellan de två.",
+      "notes": [
+        "Hålls isär från Elinebergsplatsen. Slå inte ihop dem."
+      ]
+    },
+    {
+      "id": "wieselgrensskolan",
+      "type": "bus-stop",
+      "appName": "Wieselgrensskolan",
+      "query": "Wieselgrensskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Wieselgrensskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Wieselgrensskolan",
+      "mapName": "Wieselgrensskolan, C4",
+      "mapCell": "C4",
+      "mapStop": "Wieselgrensskolan",
+      "landmark": "Husensjö",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i C4."
+    },
+    {
+      "id": "husensjoskolan",
+      "type": "bus-stop",
+      "appName": "Husensjöskolan",
+      "query": "Husensjöskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Husensj%C3%B6skolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Husensjöskolan",
+      "mapName": "Husensjöskolan, C4",
+      "mapCell": "C4",
+      "mapStop": "Husensjöskolan",
+      "landmark": "Husensjö",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i C4."
+    },
+    {
+      "id": "gustavslundsskolan",
+      "type": "bus-stop",
+      "appName": "Gustavslundsskolan",
+      "query": "Gustavslundsskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Gustavslundsskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Gustavslundsskolan",
+      "mapName": "Gustavslundsskolan, D4",
+      "mapCell": "D4",
+      "mapStop": "Gustavslundsskolan",
+      "landmark": "Långeberga",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i D4."
+    },
+    {
+      "id": "vastergard-ip",
+      "type": "bus-stop",
+      "appName": "Adolfsberg (Västergård IP 300 m)",
+      "query": "Adolfsberg, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Adolfsberg%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Adolfsberg",
+      "mapName": "Västergårds IP, D4",
+      "mapCell": "D4",
+      "mapStop": "Västergårds IP",
+      "landmark": "Adolfsberg, väster om Västergårds IP",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/bo-bygga-och-miljo/bostader/bostadsomraden-och-samhallen/adolfsberg-ragnvalla-vastergard/"
+      ],
+      "reasoning": "Tidtabellen kallar hållplatsen \"Adolfsberg (Västergård IP 300 m)\" och kartan skriver ut samma 300 m. Hållplatsen är alltså inte planen. Sökfrasen pekar på Adolfsberg, som är hållplatsens namn; exakt läge inom stadsdelen går inte att läsa ur kartan. Spelplatsen Västergårds IP har en egen post för de sista 300 metrarna.",
+      "notes": [
+        "Hållplatsen ligger ca 300 m från planen. Exakt läge inom Adolfsberg framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "filborna-ip",
+      "type": "bus-stop",
+      "appName": "Filbornaskolan / Filborna IP",
+      "query": "Filbornaskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filbornaskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Filbornaskolan",
+      "mapName": "Filborna IP, C3 D3",
+      "mapCell": "C3 D3",
+      "mapStop": "Filborna IP",
+      "landmark": "Filborna IP, Nanny Palmkvistskolan",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
+      ],
+      "reasoning": "Kartans H-symbol i C3 D3 heter \"Filborna IP\" och ligger vid Filbornaskolan, som är tidtabellens namn på hållplatsen. Under bussresan gäller hållplatsen, alltså skolan. Spelplatsen Filborna IP har en egen post för den sista gångsträckan.",
+      "notes": [
+        "Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "olympiaskolan",
+      "type": "bus-stop",
+      "appName": "Olympiaskolan",
+      "query": "Olympiaskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Olympiaskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Olympiaskolan",
+      "mapName": "Olympiaskolan, C4",
+      "mapCell": "C4",
+      "mapStop": "Olympiaskolan",
+      "landmark": "Olympiafältet, Idrottens Hus",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid Olympiaskolan. Spelplatsen Olympiafältet ligger strax norr om."
+    },
+    {
+      "id": "tagaborgsskolan",
+      "type": "bus-stop",
+      "appName": "Tågaborgsskolan",
+      "query": "Tågaborgsskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=T%C3%A5gaborgsskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Tågaborgsskolan",
+      "mapName": "Tågaborgsskolan, C3",
+      "mapCell": "C3",
+      "mapStop": "Tågaborgsskolan",
+      "landmark": "Fredriksdal",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i C3."
+    },
+    {
+      "id": "norrvalla-ip",
+      "type": "bus-stop",
+      "appName": "Norrvalla IP",
+      "query": "Norrvalla IP, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Norrvalla+IP%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Norrvalla IP",
+      "mapName": "Norrvalla IP, C3",
+      "mapCell": "C3",
+      "mapStop": "Norrvalla IP",
+      "landmark": "Berga, Dalhem",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Norrvalla IP\" i C3. Tidtabellens stavning \"Norvalla\" är fel; kartan skriver Norrvalla."
+    },
+    {
+      "id": "barslov",
+      "type": "bus-stop",
+      "appName": "Bårslöv",
+      "query": "Bållevi IP, Bårslöv, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=B%C3%A5llevi+IP%2C+B%C3%A5rsl%C3%B6v%2C+Sverige",
+      "matchedName": "Bållevi IP",
+      "mapName": "Bållevi IP, Bårslöv, E5",
+      "mapCell": "E5",
+      "mapStop": "Bårslöv",
+      "landmark": "Bållevi IP, Bårslöv",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbolen \"Bårslöv\" ligger vid den gröna spelplatsen \"Bållevi IP\" i E5, inte i ortens mitt. Sökfrasen pekar därför på idrottsplatsen.",
+      "notes": [
+        "Cupspecifik hållplats. Exakt vägkant framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "gantofta",
+      "type": "bus-stop",
+      "appName": "Gantofta",
+      "query": "Stendösvallen, Gantofta, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Stend%C3%B6svallen%2C+Gantofta%2C+Sverige",
+      "matchedName": "Stendösvallen",
+      "mapName": "Stendösvallen, Gantofta, E6",
+      "mapCell": "E6",
+      "mapStop": "Gantofta",
+      "landmark": "Gantofta skola, Gantofta idrottshall, Gantofta station",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbolen \"Gantofta\" ligger vid spelplatsen \"Stendösvallen\" och Gantofta skola i E6, inte i ortens mitt.",
+      "notes": [
+        "Cupspecifik hållplats. Exakt vägkant framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "paarp-medevi",
+      "type": "bus-stop",
+      "appName": "Påarp Medevi",
+      "query": "Medevi IP, Påarp, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Medevi+IP%2C+P%C3%A5arp%2C+Sverige",
+      "matchedName": "Medevi IP",
+      "mapName": "Medevi IP, Påarp, E4 F4",
+      "mapCell": "E4 F4",
+      "mapStop": "Medevi IP",
+      "landmark": "Påarp station",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "Kartan bekräftar \"Medevi IP, Påarp\" i E4 F4 med H-symbol med samma namn. Tidtabellens \"Påarp Medevi\" syftar alltså på Medevi IP."
+    },
+    {
+      "id": "morarp-vidablick-ip",
+      "type": "bus-stop",
+      "appName": "Mörarp Vidablick IP",
+      "query": "Vidablick IP, Mörarp, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Vidablick+IP%2C+M%C3%B6rarp%2C+Sverige",
+      "confidence": "low",
+      "verificationStatus": "unverified",
+      "sourceUrls": [
+        "data/busslinjer2026eskilscupen.pdf"
+      ],
+      "reasoning": "Mörarp saknas helt på 2025 års karta. Linje 17 gick då till Höganäs och Lerberget, inte till Mörarp.",
+      "notes": [
+        "Linje 17 har lagts om mellan 2025 och 2026. Kräver uppgift från arrangören."
+      ]
+    },
+    {
+      "id": "flygfaltet",
+      "type": "bus-stop",
+      "appName": "Flygfältet (Vattentornet)",
+      "query": "Filborna vattentorn, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filborna+vattentorn%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Vattentornet",
+      "mapName": "Flygfältet / Vattentornet, D3",
+      "mapCell": "D3",
+      "mapStop": "Flygfältet",
+      "landmark": "Filborna vattentorn vid Österleden i höjd med Filbornavägen, öster om Filborna",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/trafik-och-stadsplanering/trafik-och-byggprojekt/trafik-och-stadsmiljo/helsingborgs-nya-vattentorn/",
+        "https://sv.wikipedia.org/wiki/Filborna_vattentorn"
+      ],
+      "reasoning": "Kartan visar \"Flygfältet / Vattentornet, D3\" som en egen grön spelplats med H-symbol öster om Filborna. Vattentornet är samma byggnad som Helsingborgs stad och NSVA kallar Filborna vattentorn: 40 meter högt, invigt 2022, vid Österleden i höjd med Filbornavägen. Det är ett namngivet landmärke i rätt kartcell, till skillnad från ordet Flygfältet.",
+      "notes": [
+        "Sökfrasen pekar på vattentornet, inte på spelplanens kortsida. Exakt vägkant framgår inte av kartan."
+      ]
+    },
+    {
+      "id": "maria-park",
+      "type": "bus-stop",
+      "appName": "Maria Park",
+      "query": "Maria Parkskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Maria+Parkskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Maria Parkskolan",
+      "mapName": "Maria Park fotbollsplan, C2",
+      "mapCell": "C2",
+      "mapStop": "Maria Park IP",
+      "landmark": "Maria Parkskolan, Kullavägen, Maria station",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbolen \"Maria Park IP\" ligger vid Maria Parkskolan och Kullavägen i C2. Skolan är den entydigaste sökfrasen."
+    },
+    {
+      "id": "larods-ip",
+      "type": "bus-stop",
+      "appName": "Laröds IP",
+      "query": "Laröds IP, Laröd, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lar%C3%B6ds+IP%2C+Lar%C3%B6d%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Laröds IP",
+      "mapName": "Laröds IP, A1 B1",
+      "mapCell": "A1 B1",
+      "mapStop": "Laröds IP",
+      "landmark": "Hittarpshallen",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol \"Laröds IP\" vid den gröna spelplatsen i A1 B1."
+    },
+    {
+      "id": "scandic-nord",
+      "type": "bus-stop",
+      "appName": "Scandic Nord",
+      "query": "Scandic Helsingborg Nord, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Scandic+Helsingborg+Nord%2C+Sverige",
+      "matchedName": "Scandic Nord",
+      "mapName": "Scandic Nord, C2",
+      "mapCell": "C2",
+      "mapStop": "Scandic Nord",
+      "landmark": "Väla",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid hotellet i C2, listat under Övriga platser."
+    },
+    {
+      "id": "allerums-ip",
+      "type": "bus-stop",
+      "appName": "Allerums IP",
+      "query": "Ryavallen, Allerum, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ryavallen%2C+Allerum%2C+Sverige",
+      "matchedName": "Ryavallen",
+      "mapName": "Ryavallen, Allerum, C1",
+      "mapCell": "C1",
+      "mapStop": "Allerums IP",
+      "landmark": "Allerum",
+      "confidence": "medium",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbolen heter \"Allerums IP\" men anläggningen heter Ryavallen enligt kartans indexlista. Sökfrasen använder anläggningens namn."
+    },
+    {
+      "id": "odakra-toftavallen",
+      "type": "bus-stop",
+      "appName": "Spritan, Ödåkra Fabriksgatan – Toftavallen",
+      "query": "Spritan, Ödåkra, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Spritan%2C+%C3%96d%C3%A5kra%2C+Sverige",
+      "matchedName": "Spritan",
+      "mapName": "Toftavallen, Ödåkra, D1",
+      "mapCell": "D1",
+      "mapStop": "Toftavallen / Gläntanskolan",
+      "landmark": "Ödåkra spritfabrik vid Fabriksgatan, Ödåkra station",
+      "confidence": "medium",
+      "verificationStatus": "probable",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf",
+        "https://spritan.com/",
+        "https://visithelsingborg.com/plats/spritan/"
+      ],
+      "reasoning": "2026 års tidtabell kallar hållplatsen \"Spritan, Ödåkra Fabriksgatan – Toftavallen\" och sätter alltså påstigningsplatsen först. Spritan är den gamla spritfabriken vid Fabriksgatan, ett namngivet besöksmål. Kartans H-symbol 2025 heter \"Toftavallen Gläntanskolan\" och ligger vid spelplatsen — ett annat läge. Under bussresan gäller tidtabellens hållplats; spelplatsen Toftavallen har en egen post för den sista gångsträckan.",
+      "notes": [
+        "Hållplatsnamnet skiljer sig mellan kartan 2025 och tidtabellen 2026."
+      ]
+    },
+    {
+      "id": "ronnowska-skolan",
+      "type": "bus-stop",
+      "appName": "Rönnowska skolan",
+      "query": "Rönnowska skolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=R%C3%B6nnowska+skolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Rönnowska skolan",
+      "mapName": "Rönnowska skolan, C4",
+      "mapCell": "C4",
+      "mapStop": "Rönnowska skolan",
+      "landmark": "Rönnowska hallen",
+      "confidence": "high",
+      "verificationStatus": "verified-against-official-map",
+      "sourceUrls": [
+        "data/eskilscupen-karta-2025.pdf"
+      ],
+      "reasoning": "H-symbol vid skolan i C4."
+    }
+  ]
+}

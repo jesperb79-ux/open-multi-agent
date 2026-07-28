@@ -287,6 +287,44 @@ Två genererade filer finns för manuell granskning:
   båda kolumnerna i dubblettgrupper.
 * `data/journey-checks.md` — kontrollrapporten ovan.
 
+## Google Maps-länkar (prototyp, avstängd)
+
+Funktionen ligger bakom en feature flag och är **av** som standard:
+
+```bash
+VITE_ENABLE_MAPS=false   # standard — appen fungerar precis som utan länkarna
+VITE_ENABLE_MAPS=true    # visar Navigera-länkarna
+```
+
+På Vercel sätts flaggan av byggkommandot i `vercel.json`, utifrån `VERCEL_ENV`:
+**preview får länkarna, produktion inte.** Det ligger i repot i stället för i
+en dashboard-inställning, så det följer med grenen och kan inte glömmas bort.
+Vill du styra det per miljö i Vercels gränssnitt i stället, ta bort prefixet i
+`buildCommand` och lägg upp variabeln där.
+
+Appen bygger bara adresser som användaren själv klickar på. Ingen inbyggd
+karta, ingen iframe, inget kartbibliotek, ingen API-nyckel, ingen
+platsbehörighet och ingen bakgrundshämtning från Google.
+
+Kedjan från plats till länk:
+
+```bash
+npm run maps            # kör alla tre stegen nedan
+npm run maps:candidates # data/map-candidates.json — alla planer och hållplatser
+npm run maps:matches    # data/google-maps-matches.json — sökfras och bedömning mot kartan
+npm run maps:report     # docs/google-maps-verification-report.md
+```
+
+Varje plats är kontrollerad mot Eskilscupens officiella karta
+(`data/eskilscupen-karta-2025.pdf`), som har en indexlista med kartcell och
+rosa H-symboler för cupens busshållplatser. **40 av 43 platser är verifierade
+mot kartan.** `unverified` och `low` visas inte alls — hellre ingen länk än en
+som leder fel. Platser där kartan inte entydigt visar hållplatsläget får texten
+"Kontrollera skyltning på plats."
+
+Se `docs/map-pdf-analysis.md` för läsningen av kartan och
+`docs/google-maps-verification-report.md` för tabellen plats för plats.
+
 ## Vad som medvetet inte finns med
 
 GPS, livepositioner, konton, pushnotiser och kartor. Grundlogiken — korrekta
