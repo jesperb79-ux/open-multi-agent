@@ -1,0 +1,26 @@
+# Miljövariabler med hemliga nycklar
+.env
+
+# Python-artefakter
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+
+# CSV-loggar (kan innehålla handelsdata)
+*.csv
+
+# IDE-filer
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Systemfiler
+.DS_Store
+Thumbs.db
