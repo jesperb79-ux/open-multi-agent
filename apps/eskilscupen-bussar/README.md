@@ -1,7 +1,7 @@
 # Eskilscupen – bussresor
 
 Mobilanpassad reseplanerare för cupbussarna under Eskilscupen i Helsingborg.
-Välj startplan, målplan, datum och tid — appen räknar ut bästa resvägen, även
+Välj startplan, målplan, cupdag och tid — appen räknar ut bästa resvägen, även
 när den kräver ett eller flera byten.
 
 All tidtabellsdata kommer från cupens officiella PDF
@@ -52,6 +52,7 @@ scripts/stop-config.mjs              hållplatser, alias, fotbollsplaner, trafik
 scripts/import-timetable.mjs         PDF -> normaliserad JSON + rapport
 src/data/timetable.json              genererad tidtabell (linjer, hållplatser, turer)
 src/data/venues.json                 genererad koppling fotbollsplan -> hållplats(er)
+src/config/tournament.ts             cupens verifierade trafikdatum
 src/data/timetable.ts                inläsning och validering av data
 src/planner/findJourneys.ts          reseplaneraren (helt fristående från gränssnittet)
 src/planner/time.ts                  tidsparsning och formatering
@@ -134,12 +135,20 @@ En sökning på hela dagens trafik tar ungefär 10–20 ms.
 
 ## Antaganden
 
-* **Trafikdygn väljs på veckodag.** PDF:en innehåller inga kalenderdatum, bara
-  "fredag & lördag" respektive "söndag". Appen matchar därför valt datum mot
-  veckodag: fredag och lördag ger `fre-lor`, söndag ger `sondag`, och måndag–
-  torsdag ger ett tydligt meddelande om att cupbussarna inte kör. Vill man låsa
-  appen till cupens faktiska datum sätts det i `SERVICES` i
-  `scripts/stop-config.mjs`.
+* **Cupdatumen ligger i konfiguration, inte i tidtabellsdatan.** PDF:en
+  innehåller inga kalenderdatum, bara trafikdygnen "fredag & lördag" och
+  "söndag". Kopplingen datum → tidtabell står i `src/config/tournament.ts`:
+
+  | Datum | Etikett | Tidtabell |
+  | --- | --- | --- |
+  | 2026-07-31 | Fredag 31 juli 2026 | `fre-lor` |
+  | 2026-08-01 | Lördag 1 augusti 2026 | `fre-lor` |
+  | 2026-08-02 | Söndag 2 augusti 2026 | `sondag` |
+
+  Gränssnittet har ingen fri datumruta — bara dessa tre dagar går att välja.
+  Förvalt är närmast kommande cupdag; är cupen redan avslutad förväljs fredagen
+  och en notis säger det, men ingen sökning görs förrän användaren trycker på
+  "Sök resa".
 * **Stavningsvarianter slås ihop, olika hållplatsnamn gör det inte.** En plan
   som nås från två olika hållplatser får två poster i platsväljaren i stället
   för en hopslagen hållplats — se punkt 1 under Kända oklarheter.
@@ -211,11 +220,13 @@ arrangören inför nästa år:
 4. Kör om importen tills rapporten är felfri.
 5. Ändras trafikdygnen (t.ex. om cupen får en torsdag) uppdateras `SERVICES` och
    `SERVICE_PATTERNS` i samma fil.
-6. `npm test` — testerna i `tests/timetable-data.test.ts` kontrollerar bland
+6. Byt cupens datum i `src/config/tournament.ts` — `tournamentDates` och
+   `TOURNAMENT_YEAR`. Det är den enda plats där kalenderdatum finns.
+7. `npm test` — testerna i `tests/timetable-data.test.ts` kontrollerar bland
    annat att JSON-filen och rapporten kommer från samma PDF (sha256) och att
    varje tur har stigande tider och kända hållplatser. Uppdatera de
    förväntningar som gäller den gamla tidtabellen.
-7. `npm run build` och publicera.
+8. `npm run build` och publicera.
 
 Importen fungerar så länge PDF:en behåller samma layout: en rubrik av typen
 `LINJE <nr> <NORRUT|SÖDERUT|NORR/SÖDERUT> <FREDAG & LÖRDAG|SÖNDAG>`, en rad per
@@ -225,7 +236,7 @@ fortfarande aldrig ändras.
 
 ## Tester
 
-`npm test` kör 57 tester i fyra filer:
+`npm test` kör 65 tester i fem filer:
 
 * `tests/findJourneys.test.ts` — algoritmen mot små, handskrivna nät: direktresa,
   ett byte, två byten, för kort bytestid, senare avgång med tidigare ankomst,
@@ -237,6 +248,8 @@ fortfarande aldrig ändras.
   midnattspassage, ogiltiga klockslag, okända hållplatsnamn, rader utan namn,
   ofullständiga kolumner och dubblettborttagning.
 * `tests/timetable-data.test.ts` — den riktiga, importerade tidtabellen.
+* `tests/tournament.test.ts` — cupdatumen: kopplingen till rätt tidtabell, att
+  årtalet visas, och vilken dag som förväljs före, under och efter cupen.
 * `tests/journey-checks.test.ts` — tretton verkliga resefall (direktresa, ett
   byte, två byten, för kort bytestid, fredag/lördag, söndag, tur som hoppar över
   hållplatser, linje 17:s snabbtur, Harlyckan som start och som mål, ingen resa).

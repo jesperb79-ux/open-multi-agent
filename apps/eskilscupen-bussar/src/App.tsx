@@ -1,7 +1,15 @@
 import { useMemo, useState } from 'react'
 import { JourneyCard } from './components/JourneyCard'
 import { PlaceSelect } from './components/PlaceSelect'
-import { connections, serviceForDate, timetable, validateData } from './data/timetable'
+import {
+  defaultTournamentDate,
+  isAfterTournament,
+  tournamentDateByValue,
+  tournamentDateLabel,
+  tournamentDates,
+  TOURNAMENT_YEAR,
+} from './config/tournament'
+import { connections, timetable, validateData } from './data/timetable'
 import { placeByKey, venuesWithoutStop } from './places'
 import { DEFAULT_MINIMUM_TRANSFER_MINUTES, findJourneys } from './planner/findJourneys'
 import { tryParseTime } from './planner/time'
@@ -17,6 +25,10 @@ const nowTime = () => {
   return `${pad(now.getHours())}:${pad(now.getMinutes())}`
 }
 
+/** Etikett för trafikdygnet ur den importerade tidtabellen, t.ex. "Fredag & lördag". */
+const serviceLabel = (serviceId: string) =>
+  timetable.services.find((service) => service.id === serviceId)?.label ?? serviceId
+
 type Result =
   | { kind: 'idle' }
   | { kind: 'journeys'; journeys: Journey[] }
@@ -26,13 +38,14 @@ type Result =
 export default function App() {
   const [origin, setOrigin] = useState('')
   const [destination, setDestination] = useState('')
-  const [date, setDate] = useState(todayIso)
+  const [date, setDate] = useState<string>(() => defaultTournamentDate(todayIso()).date)
   const [time, setTime] = useState(nowTime)
   const [minimumTransferMinutes, setMinimumTransferMinutes] = useState(DEFAULT_MINIMUM_TRANSFER_MINUTES)
   const [result, setResult] = useState<Result>({ kind: 'idle' })
 
   const dataProblems = useMemo(validateData, [])
-  const service = useMemo(() => serviceForDate(date), [date])
+  const tournamentOver = useMemo(() => isAfterTournament(todayIso()), [])
+  const tournamentDay = tournamentDateByValue.get(date) ?? tournamentDates[0]
   const originPlace = placeByKey.get(origin)
   const destinationPlace = placeByKey.get(destination)
   const unresolvedNotes = [
@@ -66,15 +79,6 @@ export default function App() {
       setResult({ kind: 'error', message: `Ogiltig tid: "${time}". Ange tiden som HH:MM.` })
       return
     }
-    if (!service) {
-      setResult({
-        kind: 'empty',
-        message:
-          'Cupbussarna kör bara fredag, lördag och söndag. Välj ett av de datumen för att se avgångar.',
-      })
-      return
-    }
-
     try {
       const journeys = findJourneys({
         connections,
@@ -82,7 +86,7 @@ export default function App() {
         destinationStop: destinationPlace.stopId,
         earliestDeparture: time,
         minimumTransferMinutes,
-        serviceId: service.id,
+        serviceId: tournamentDay.timetableType,
         maxTransfers: 3,
         maxResults: 3,
       })
@@ -92,7 +96,8 @@ export default function App() {
           kind: 'empty',
           message:
             `Ingen resa hittades från ${originPlace.label} till ${destinationPlace.label} ` +
-            `efter ${time} (${service.label.toLowerCase()}). Prova en tidigare tid, ett annat datum ` +
+            `efter ${time} ${tournamentDateLabel(tournamentDay).toLowerCase()}. Prova en tidigare tid, ` +
+            'en annan cupdag ' +
             'eller en längre tillåten restid.',
         })
         return
@@ -130,6 +135,13 @@ export default function App() {
         <p className="lead">Hitta rätt cupbuss mellan planerna i Helsingborg.</p>
       </header>
 
+      {tournamentOver && (
+        <div className="notice notice-warning" role="status">
+          Eskilscupen {TOURNAMENT_YEAR} är avslutad. Tidtabellen visas fortfarande för cupens tre
+          dagar — välj en av dem och tryck på ”Sök resa”.
+        </div>
+      )}
+
       {venuesWithoutStop.length > 0 && (
         <div className="notice notice-warning" role="status">
           Följande planer saknar hållplats i tidtabellen:{' '}
@@ -148,8 +160,14 @@ export default function App() {
 
         <div className="row">
           <div className="field">
-            <label htmlFor="date">Datum</label>
-            <input id="date" type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+            <label htmlFor="date">Cupdag {TOURNAMENT_YEAR}</label>
+            <select id="date" value={date} onChange={(event) => setDate(event.target.value)}>
+              {tournamentDates.map((day) => (
+                <option key={day.date} value={day.date}>
+                  {tournamentDateLabel(day)}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="field">
             <label htmlFor="time">Tidigast avgång</label>
@@ -157,10 +175,8 @@ export default function App() {
           </div>
         </div>
 
-        <p className={service ? 'service-note' : 'service-note service-note-warning'}>
-          {service
-            ? `Trafikdygn: ${service.label}`
-            : 'Inga cupbussar detta datum — de kör fredag, lördag och söndag.'}
+        <p className="service-note">
+          {tournamentDateLabel(tournamentDay)} · Trafikdygn: {serviceLabel(tournamentDay.timetableType)}
         </p>
 
         <details className="settings">
