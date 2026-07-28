@@ -8,6 +8,8 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
+      // Standalone apps ship their own package.json and test runner.
+      'apps/**',
       // E2E tests require API keys — run with: npm run test:e2e
       ...(process.env['RUN_E2E'] ? [] : ['tests/e2e/**']),
     ],

@@ -1,0 +1,82 @@
+{
+  "source": {
+    "file": "busslinjer2026eskilscupen.pdf",
+    "sha256": "83c6918ae54dbb47f55ed3449030a44d81940c84a0d4ec8e186f4d3b56103e27",
+    "pages": 24
+  },
+  "summary": {
+    "pages": 24,
+    "routes": 9,
+    "stops": 28,
+    "trips": 846,
+    "connections": 5330,
+    "duplicatesRemoved": 8,
+    "tripsRejected": 0,
+    "errors": 0,
+    "warnings": 9
+  },
+  "unknownStopLabels": [],
+  "issues": [
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 10,
+      "tripId": "13-fre-lor-p10b1c2",
+      "detail": "Identisk med 13-fre-lor-p10b1c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 11,
+      "tripId": "13-fre-lor-p11b1c3",
+      "detail": "Identisk med 13-fre-lor-p11b1c2 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 12,
+      "tripId": "13-sondag-p12b1c2",
+      "detail": "Identisk med 13-sondag-p12b1c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 13,
+      "tripId": "13-sondag-p13b1c3",
+      "detail": "Identisk med 13-sondag-p13b1c2 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 15,
+      "tripId": "14-fre-lor-p15b1c2",
+      "detail": "Identisk med 14-fre-lor-p15b1c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 17,
+      "tripId": "14-sondag-p17b1c2",
+      "detail": "Identisk med 14-sondag-p17b1c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 18,
+      "tripId": "15-fre-lor-p18b2c2",
+      "detail": "Identisk med 15-fre-lor-p18b2c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "duplicate-trip",
+      "page": 19,
+      "tripId": "15-sondag-p19b2c2",
+      "detail": "Identisk med 15-sondag-p19b2c1 (samma linje, trafikdygn, hållplatser och tider) — dubbletten togs bort"
+    },
+    {
+      "level": "warning",
+      "code": "venue-stops-unresolved",
+      "detail": "Harlyckans IP: Tidtabellen använder två olika hållplatsnamn för Harlyckans IP: \"Elinebergsplatsen\" (linje 11, 13, 14, 17) och \"Elinebergskyrkan\" (linje 12, 21). Det går inte att avgöra ur underlaget om det är samma fysiska hållplats. De hålls därför isär, och ett byte mellan dem planeras inte som ett bussbyte utan kräver att du går. Kontrollera med arrangören."
+    }
+  ]
+}
