@@ -9,7 +9,8 @@ import {
   tournamentDates,
   TOURNAMENT_YEAR,
 } from './config/tournament'
-import { connections, timetable, validateData } from './data/timetable'
+import { connections, servicesServingStop, isStopServed, timetable, validateData } from './data/timetable'
+import { journeyKey } from './journey-key'
 import { placeByKey, venuesWithoutStop } from './places'
 import { DEFAULT_MINIMUM_TRANSFER_MINUTES, findJourneys } from './planner/findJourneys'
 import { tryParseTime } from './planner/time'
@@ -42,6 +43,8 @@ export default function App() {
   const [time, setTime] = useState(nowTime)
   const [minimumTransferMinutes, setMinimumTransferMinutes] = useState(DEFAULT_MINIMUM_TRANSFER_MINUTES)
   const [result, setResult] = useState<Result>({ kind: 'idle' })
+  // Räknas upp vid varje sökning så att resekorten byts ut helt.
+  const [searchId, setSearchId] = useState(0)
 
   const dataProblems = useMemo(validateData, [])
   const tournamentOver = useMemo(() => isAfterTournament(todayIso()), [])
@@ -79,6 +82,21 @@ export default function App() {
       setResult({ kind: 'error', message: `Ogiltig tid: "${time}". Ange tiden som HH:MM.` })
       return
     }
+
+    // Fem hållplatser trafikeras bara på söndagen. Säg det med platsens namn
+    // i stället för att låta planeraren svara med ett internt hållplats-id.
+    for (const place of [originPlace, destinationPlace]) {
+      if (isStopServed(place.stopId, tournamentDay.timetableType)) continue
+      const otherDays = servicesServingStop(place.stopId)
+      setResult({
+        kind: 'empty',
+        message: otherDays.length
+          ? `${place.label} trafikeras inte ${tournamentDateLabel(tournamentDay).toLowerCase()}. ` +
+            `Cupbussarna kör dit ${otherDays.map((s) => s.label.toLowerCase()).join(' och ')}.`
+          : `${place.label} trafikeras inte av cupbussarna.`,
+      })
+      return
+    }
     try {
       const journeys = findJourneys({
         connections,
@@ -102,6 +120,7 @@ export default function App() {
         })
         return
       }
+      setSearchId((current) => current + 1)
       setResult({ kind: 'journeys', journeys })
     } catch (error) {
       const message =
@@ -227,7 +246,7 @@ export default function App() {
               </p>
             )}
             {result.journeys.map((journey, index) => (
-              <JourneyCard key={`${journey.departureTime}-${journey.legs[0].tripId}`} journey={journey} index={index} />
+              <JourneyCard key={journeyKey(searchId, index, journey)} journey={journey} index={index} />
             ))}
           </>
         )}

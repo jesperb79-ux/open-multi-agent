@@ -26,6 +26,33 @@ export function serviceForDate(isoDate: string, services: Service[] = timetable.
   return services.find((s) => s.weekdays.includes(weekday)) ?? null
 }
 
+/**
+ * Vilka hållplatser som trafikeras vilket trafikdygn.
+ *
+ * Fem hållplatser går bara på söndagen (Gantofta, Påarp Medevi, Allerums IP,
+ * Flygfältet och Mörarp Vidablick IP). Utan den här uppslagningen möts en
+ * användare som söker till dem på en fredag av ett tekniskt felmeddelande med
+ * ett internt id i stället för en förklaring.
+ */
+export const servedStopIdsByService = new Map<string, Set<string>>(
+  timetable.services.map((service) => [
+    service.id,
+    new Set(
+      timetable.trips
+        .filter((trip) => trip.serviceId === service.id)
+        .flatMap((trip) => trip.stopTimes.map((stopTime) => stopTime.stopId)),
+    ),
+  ]),
+)
+
+/** Sant när hållplatsen har minst en avgång eller ankomst det trafikdygnet. */
+export const isStopServed = (stopId: string, serviceId: string): boolean =>
+  servedStopIdsByService.get(serviceId)?.has(stopId) ?? false
+
+/** De trafikdygn hållplatsen trafikeras — tom lista om den aldrig trafikeras. */
+export const servicesServingStop = (stopId: string): Service[] =>
+  timetable.services.filter((service) => isStopServed(stopId, service.id))
+
 export interface DataProblem {
   code: 'no-trips' | 'venue-without-stop' | 'unknown-stop-reference'
   message: string
