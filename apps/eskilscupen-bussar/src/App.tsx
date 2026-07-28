@@ -1,6 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { currentDate, currentTime } from './clock'
 import { JourneyCard } from './components/JourneyCard'
 import { PlaceSelect } from './components/PlaceSelect'
+import {
+  browserStorage,
+  favoriteFor,
+  loadFavorites,
+  saveFavorites,
+  toggleFavorite,
+  type FavoriteSlot,
+} from './favorites'
+import { shareApp } from './share'
 import {
   defaultTournamentDate,
   isAfterTournament,
@@ -16,16 +26,6 @@ import { DEFAULT_MINIMUM_TRANSFER_MINUTES, findJourneys } from './planner/findJo
 import { tryParseTime } from './planner/time'
 import { PlannerError, type Journey } from './types'
 
-const pad = (value: number) => String(value).padStart(2, '0')
-const todayIso = () => {
-  const now = new Date()
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
-}
-const nowTime = () => {
-  const now = new Date()
-  return `${pad(now.getHours())}:${pad(now.getMinutes())}`
-}
-
 /** Etikett för trafikdygnet ur den importerade tidtabellen, t.ex. "Fredag & lördag". */
 const serviceLabel = (serviceId: string) =>
   timetable.services.find((service) => service.id === serviceId)?.label ?? serviceId
@@ -36,18 +36,25 @@ type Result =
   | { kind: 'empty'; message: string }
   | { kind: 'error'; message: string }
 
+const storage = browserStorage()
+
 export default function App() {
-  const [origin, setOrigin] = useState('')
-  const [destination, setDestination] = useState('')
-  const [date, setDate] = useState<string>(() => defaultTournamentDate(todayIso()).date)
-  const [time, setTime] = useState(nowTime)
+  // Favoriterna läses en gång och avgör vad som är förvalt vid start.
+  const [favorites, setFavorites] = useState(() =>
+    loadFavorites(storage, (placeKey) => placeByKey.has(placeKey)),
+  )
+  const [origin, setOrigin] = useState(() => favoriteFor(favorites, 'origin'))
+  const [destination, setDestination] = useState(() => favoriteFor(favorites, 'destination'))
+  const [date, setDate] = useState<string>(() => defaultTournamentDate(currentDate()).date)
+  const [time, setTime] = useState(currentTime)
   const [minimumTransferMinutes, setMinimumTransferMinutes] = useState(DEFAULT_MINIMUM_TRANSFER_MINUTES)
   const [result, setResult] = useState<Result>({ kind: 'idle' })
   // Räknas upp vid varje sökning så att resekorten byts ut helt.
   const [searchId, setSearchId] = useState(0)
+  const [shareMessage, setShareMessage] = useState('')
 
   const dataProblems = useMemo(validateData, [])
-  const tournamentOver = useMemo(() => isAfterTournament(todayIso()), [])
+  const tournamentOver = useMemo(() => isAfterTournament(currentDate()), [])
   const tournamentDay = tournamentDateByValue.get(date) ?? tournamentDates[0]
   const originPlace = placeByKey.get(origin)
   const destinationPlace = placeByKey.get(destination)
@@ -60,6 +67,25 @@ export default function App() {
     setDestination(origin)
     setResult({ kind: 'idle' })
   }
+
+  /** Slår på eller av favoriten och skriver till localStorage direkt. */
+  const toggleFavoritePlace = (slot: FavoriteSlot, placeKey: string) => {
+    const next = toggleFavorite(favorites, slot, placeKey)
+    setFavorites(next)
+    saveFavorites(storage, next)
+  }
+
+  const share = async () => {
+    const outcome = await shareApp(window.location.href, window.navigator)
+    setShareMessage(outcome.kind === 'copied' || outcome.kind === 'failed' ? outcome.message : '')
+  }
+
+  // Meddelandet efter en kopierad länk är kort och försvinner av sig självt.
+  useEffect(() => {
+    if (!shareMessage) return undefined
+    const timer = window.setTimeout(() => setShareMessage(''), 4000)
+    return () => window.clearTimeout(timer)
+  }, [shareMessage])
 
   const search = (event: React.FormEvent) => {
     event.preventDefault()
@@ -169,13 +195,31 @@ export default function App() {
       )}
 
       <form className="search" onSubmit={search}>
-        <PlaceSelect id="origin" label="Från" value={origin} onChange={setOrigin} />
+        <PlaceSelect
+          id="origin"
+          label="Från"
+          value={origin}
+          onChange={setOrigin}
+          favorite={{
+            isFavorite: Boolean(origin) && favorites.origin === origin,
+            onToggle: () => toggleFavoritePlace('origin', origin),
+          }}
+        />
 
         <button type="button" className="swap" onClick={swap} aria-label="Byt plats på start och destination">
           <span aria-hidden="true">⇅</span> Byt håll
         </button>
 
-        <PlaceSelect id="destination" label="Till" value={destination} onChange={setDestination} />
+        <PlaceSelect
+          id="destination"
+          label="Till"
+          value={destination}
+          onChange={setDestination}
+          favorite={{
+            isFavorite: Boolean(destination) && favorites.destination === destination,
+            onToggle: () => toggleFavoritePlace('destination', destination),
+          }}
+        />
 
         {/* Egen rad vardera: "Söndag 2 augusti 2026" ryms inte i ett halvbrett
             fält på 375–430 px och skulle klippas av. */}
@@ -192,7 +236,13 @@ export default function App() {
 
         <div className="field">
           <label htmlFor="time">Tidigast avgång</label>
-          <input id="time" type="time" value={time} onChange={(event) => setTime(event.target.value)} />
+          <div className="time-row">
+            <input id="time" type="time" value={time} onChange={(event) => setTime(event.target.value)} />
+            {/* type="button" — knappen fyller bara i tiden, den söker inte. */}
+            <button type="button" className="now" onClick={() => setTime(currentTime())}>
+              Nu
+            </button>
+          </div>
         </div>
 
         <p className="service-note">
@@ -251,6 +301,15 @@ export default function App() {
           </>
         )}
       </section>
+
+      <div className="share-row">
+        <button type="button" className="share" onClick={share}>
+          <span aria-hidden="true">↗</span> Dela
+        </button>
+        <span className="share-message" role="status">
+          {shareMessage}
+        </span>
+      </div>
 
       <footer className="app-foot">
         <p className="disclaimer">

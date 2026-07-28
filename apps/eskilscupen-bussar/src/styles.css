@@ -76,6 +76,73 @@ body {
   color: var(--muted);
 }
 
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 1.4rem;
+}
+
+/* Favoritstjärna — diskret, men med tillräckligt stor träffyta. */
+.star {
+  background: none;
+  border: none;
+  padding: 0.15rem 0.2rem;
+  margin: -0.15rem -0.2rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.star span[aria-hidden='true'] {
+  font-size: 1rem;
+}
+
+.star-on {
+  color: #b8860b;
+}
+
+.star:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Tidsfält med Nu-knappen bredvid. */
+.time-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.time-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.now {
+  flex: 0 0 auto;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 0.95rem;
+  min-height: 44px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--green-dark);
+  cursor: pointer;
+}
+
+.now:active {
+  background: var(--bg);
+}
+
 select,
 input[type='date'],
 input[type='time'] {
@@ -317,6 +384,39 @@ input[type='time'] {
 .via-list {
   display: block;
   margin-top: 0.2rem;
+}
+
+/* ---------------------------------------------------------------- dela */
+
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.share {
+  flex: 0 0 auto;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--green-dark);
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.share:active {
+  background: var(--bg);
+}
+
+.share-message {
+  font-size: 0.82rem;
+  color: var(--muted);
+  min-width: 0;
 }
 
 /* --------------------------------------------------------------- footer */

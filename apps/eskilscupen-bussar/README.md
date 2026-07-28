@@ -60,7 +60,11 @@ scripts/stop-config.mjs              hållplatser, alias, fotbollsplaner, trafik
 scripts/import-timetable.mjs         PDF -> normaliserad JSON + rapport
 src/data/timetable.json              genererad tidtabell (linjer, hållplatser, turer)
 src/data/venues.json                 genererad koppling fotbollsplan -> hållplats(er)
+src/clock.ts                         lokal tid för "Nu"-knappen och förvalt datum
 src/config/tournament.ts             cupens verifierade trafikdatum
+src/favorites.ts                     favoritplaner i localStorage
+src/journey-key.ts                   unika React-nycklar för resekorten
+src/share.ts                         delning via Web Share API med urklipp som reserv
 src/data/timetable.ts                inläsning och validering av data
 src/planner/findJourneys.ts          reseplaneraren (helt fristående från gränssnittet)
 src/planner/time.ts                  tidsparsning och formatering
@@ -166,6 +170,10 @@ En sökning på hela dagens trafik tar ungefär 10–20 ms.
 * **Inga koordinater eller adresser** har lagts in, eftersom PDF:en inte
   innehåller några. Fälten finns kvar i `Venue`-typen.
 * **Minsta bytestid 5 minuter**, justerbar i appens inställningar (0–20 min).
+* **Favoriter sparas bara lokalt.** Ingen inloggning och ingen server — en
+  favorit är en post i webbläsarens `localStorage`. Sparas en plats som inte
+  finns i nästa års tidtabell ignoreras den vid inläsningen i stället för att
+  återställas som ett tomt val.
 
 ## Kända oklarheter i underlaget
 
@@ -244,7 +252,7 @@ fortfarande aldrig ändras.
 
 ## Tester
 
-`npm test` kör 65 tester i fem filer:
+`npm test` kör 116 tester i nio filer:
 
 * `tests/findJourneys.test.ts` — algoritmen mot små, handskrivna nät: direktresa,
   ett byte, två byten, för kort bytestid, senare avgång med tidigare ankomst,
@@ -258,6 +266,13 @@ fortfarande aldrig ändras.
 * `tests/timetable-data.test.ts` — den riktiga, importerade tidtabellen.
 * `tests/tournament.test.ts` — cupdatumen: kopplingen till rätt tidtabell, att
   årtalet visas, och vilken dag som förväljs före, under och efter cupen.
+* `tests/place-mapping.test.ts` — att gränssnittets platsval alltid översätts
+  till ett riktigt hållplats-id innan det når reseplaneraren, och att
+  resekortens nycklar är unika.
+* `tests/clock.test.ts` — lokal tid bakom "Nu"-knappen.
+* `tests/share.test.ts` — delning via Web Share API och reserven via urklipp.
+* `tests/favorites.test.ts` — favoriter i localStorage, inklusive tom, trasig
+  och otillgänglig lagring samt föråldrade sparade värden.
 * `tests/journey-checks.test.ts` — tretton verkliga resefall (direktresa, ett
   byte, två byten, för kort bytestid, fredag/lördag, söndag, tur som hoppar över
   hållplatser, linje 17:s snabbtur, Harlyckan som start och som mål, ingen resa).
