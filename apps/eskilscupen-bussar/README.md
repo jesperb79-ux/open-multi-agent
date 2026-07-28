@@ -293,8 +293,14 @@ Funktionen ligger bakom en feature flag och är **av** som standard:
 
 ```bash
 VITE_ENABLE_MAPS=false   # standard — appen fungerar precis som utan länkarna
-VITE_ENABLE_MAPS=true    # visar "Navigera hit" och "Visa i Google Maps"
+VITE_ENABLE_MAPS=true    # visar Navigera-länkarna
 ```
+
+På Vercel sätts flaggan av byggkommandot i `vercel.json`, utifrån `VERCEL_ENV`:
+**preview får länkarna, produktion inte.** Det ligger i repot i stället för i
+en dashboard-inställning, så det följer med grenen och kan inte glömmas bort.
+Vill du styra det per miljö i Vercels gränssnitt i stället, ta bort prefixet i
+`buildCommand` och lägg upp variabeln där.
 
 Appen bygger bara adresser som användaren själv klickar på. Ingen inbyggd
 karta, ingen iframe, inget kartbibliotek, ingen API-nyckel, ingen
