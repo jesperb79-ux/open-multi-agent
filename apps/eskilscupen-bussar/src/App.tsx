@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { currentDate, currentTime } from './clock'
 import { JourneyCard } from './components/JourneyCard'
 import { PlaceSelect } from './components/PlaceSelect'
@@ -21,6 +21,7 @@ import {
 } from './config/tournament'
 import { connections, servicesServingStop, isStopServed, timetable, validateData } from './data/timetable'
 import { journeyKey } from './journey-key'
+import { mapsEnabled } from './map/feature-flag'
 import { placeByKey, venuesWithoutStop } from './places'
 import { DEFAULT_MINIMUM_TRANSFER_MINUTES, findJourneys } from './planner/findJourneys'
 import { tryParseTime } from './planner/time'
@@ -30,6 +31,10 @@ import { PlannerError, type Journey } from './types'
 const serviceLabel = (serviceId: string) =>
   timetable.services.find((service) => service.id === serviceId)?.label ?? serviceId
 
+/** "venue:harlyckan-ip@elinebergsplatsen" -> "harlyckan-ip"; "stop:raa-ip" -> "raa-ip". */
+const venueIdOf = (placeKey: string): string =>
+  placeKey.startsWith('venue:') ? placeKey.slice('venue:'.length).split('@')[0] : placeKey.slice('stop:'.length)
+
 type Result =
   | { kind: 'idle' }
   | { kind: 'journeys'; journeys: Journey[] }
@@ -37,6 +42,13 @@ type Result =
   | { kind: 'error'; message: string }
 
 const storage = browserStorage()
+
+/**
+ * Kartan laddas bara när VITE_ENABLE_MAPS är true. Är flaggan av importeras
+ * kartmodulerna aldrig, så webbläsaren hämtar inte en byte av dem och appen
+ * beter sig exakt som utan kartfunktionen.
+ */
+const MapSection = mapsEnabled() ? lazy(() => import('./map/MapSection')) : null
 
 export default function App() {
   // Favoriterna läses en gång och avgör vad som är förvalt vid start.
@@ -298,6 +310,16 @@ export default function App() {
             {result.journeys.map((journey, index) => (
               <JourneyCard key={journeyKey(searchId, index, journey)} journey={journey} index={index} />
             ))}
+            {MapSection && originPlace && destinationPlace && (
+              <Suspense fallback={null}>
+                <MapSection
+                  places={[
+                    { id: venueIdOf(originPlace.key), label: originPlace.label },
+                    { id: venueIdOf(destinationPlace.key), label: destinationPlace.label },
+                  ]}
+                />
+              </Suspense>
+            )}
           </>
         )}
       </section>

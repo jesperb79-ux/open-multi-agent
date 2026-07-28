@@ -287,6 +287,25 @@ Två genererade filer finns för manuell granskning:
   båda kolumnerna i dubblettgrupper.
 * `data/journey-checks.md` — kontrollrapporten ovan.
 
+## Kartfunktionen (prototyp, avstängd)
+
+Kartan ligger bakom en feature flag och är **av** som standard:
+
+```bash
+VITE_ENABLE_MAPS=false   # standard — appen fungerar precis som utan kartan
+VITE_ENABLE_MAPS=true    # visar kartprototypen
+```
+
+Är flaggan av importeras kartmodulerna aldrig, så webbläsaren hämtar inte en
+byte av dem.
+
+Prototypen ritar bara ut platser vars position är **kontrollerad mot
+primärkälla**. I dag är det inga alls — se `docs/map-source-audit.md`. Platser
+med osäker eller okänd position listas som "position ej bekräftad" utan att
+placeras någonstans. Inga externa karttjänster, brickor, nycklar eller
+betaltjänster används; kartan är en egen SVG och länkar vidare via `geo:`-URI
+till användarens egen kartapp.
+
 ## Vad som medvetet inte finns med
 
 GPS, livepositioner, konton, pushnotiser och kartor. Grundlogiken — korrekta
