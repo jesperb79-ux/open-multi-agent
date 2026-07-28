@@ -395,19 +395,23 @@
       "id": "hedens-ip",
       "type": "bus-stop",
       "appName": "Högastensskolan / Hedens IP",
-      "query": "Hedens IP, Helsingborg, Sverige",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hedens+IP%2C+Helsingborg%2C+Sverige",
-      "matchedName": "Hedens IP",
+      "query": "Högastensskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=H%C3%B6gastensskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Högastensskolan",
       "mapName": "Hedens IP, Helsingborg, C5",
       "mapCell": "C5",
       "mapStop": "Hedens IP",
-      "landmark": "Högastenshallen, Högastensskolan",
-      "confidence": "high",
+      "landmark": "Högastenshallen, Hedens IP",
+      "confidence": "medium",
       "verificationStatus": "verified-against-official-map",
       "sourceUrls": [
-        "data/eskilscupen-karta-2025.pdf"
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/kommunala-grundskolor/hogastensskolan/"
       ],
-      "reasoning": "Kartans H-symbol heter \"Hedens IP\", inte Högastensskolan. Sökfrasen är ändrad till hållplatsens riktiga namn; skolan ligger intill."
+      "reasoning": "Kartans H-symbol i C5 heter \"Hedens IP\", men 2026 års tidtabell kallar hållplatsen \"Högastensskolan / Hedens IP\". Under bussresan gäller hållplatsen: sökfrasen pekar på skolan, som är ett namngivet landmärke intill planen. Spelplatsen Hedens IP har en egen post och används för den sista gångsträckan.",
+      "notes": [
+        "Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan."
+      ]
     },
     {
       "id": "attekulla-ip",
@@ -547,40 +551,45 @@
       "id": "vastergard-ip",
       "type": "bus-stop",
       "appName": "Adolfsberg (Västergård IP 300 m)",
-      "query": "Västergårds IP, Helsingborg, Sverige",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=V%C3%A4sterg%C3%A5rds+IP%2C+Helsingborg%2C+Sverige",
-      "matchedName": "Västergårds IP",
+      "query": "Adolfsberg, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Adolfsberg%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Adolfsberg",
       "mapName": "Västergårds IP, D4",
       "mapCell": "D4",
       "mapStop": "Västergårds IP",
-      "landmark": "Västergårdshallen, Adolfsberg",
-      "confidence": "high",
+      "landmark": "Adolfsberg, väster om Västergårds IP",
+      "confidence": "medium",
       "verificationStatus": "verified-against-official-map",
       "sourceUrls": [
-        "data/eskilscupen-karta-2025.pdf"
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/bo-bygga-och-miljo/bostader/bostadsomraden-och-samhallen/adolfsberg-ragnvalla-vastergard/"
       ],
-      "reasoning": "Kartans H-symbol heter \"Västergårds IP\", inte Adolfsberg. Tidtabellens \"Adolfsberg (Vätergård IP 300m)\" beskriver stadsdelen och avståndet; sökfrasen följer kartans namn.",
+      "reasoning": "Tidtabellen kallar hållplatsen \"Adolfsberg (Västergård IP 300 m)\" och kartan skriver ut samma 300 m. Hållplatsen är alltså inte planen. Sökfrasen pekar på Adolfsberg, som är hållplatsens namn; exakt läge inom stadsdelen går inte att läsa ur kartan. Spelplatsen Västergårds IP har en egen post för de sista 300 metrarna.",
       "notes": [
-        "Kartan anger 300 m mellan hållplats och plan."
+        "Hållplatsen ligger ca 300 m från planen. Exakt läge inom Adolfsberg framgår inte av kartan."
       ]
     },
     {
       "id": "filborna-ip",
       "type": "bus-stop",
       "appName": "Filbornaskolan / Filborna IP",
-      "query": "Filborna IP, Helsingborg, Sverige",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filborna+IP%2C+Helsingborg%2C+Sverige",
-      "matchedName": "Filborna IP",
+      "query": "Filbornaskolan, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filbornaskolan%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Filbornaskolan",
       "mapName": "Filborna IP, C3 D3",
       "mapCell": "C3 D3",
       "mapStop": "Filborna IP",
-      "landmark": "Filbornaskolan, Nanny Palmkvistskolan",
-      "confidence": "high",
+      "landmark": "Filborna IP, Nanny Palmkvistskolan",
+      "confidence": "medium",
       "verificationStatus": "verified-against-official-map",
       "sourceUrls": [
-        "data/eskilscupen-karta-2025.pdf"
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/uppleva-och-gora/anlaggningar-och-sporthallar/fotbollsplaner/"
       ],
-      "reasoning": "Kartans H-symbol heter \"Filborna IP\" och ligger vid Filbornaskolan. Sökfrasen är ändrad från skolan till hållplatsens riktiga namn."
+      "reasoning": "Kartans H-symbol i C3 D3 heter \"Filborna IP\" och ligger vid Filbornaskolan, som är tidtabellens namn på hållplatsen. Under bussresan gäller hållplatsen, alltså skolan. Spelplatsen Filborna IP har en egen post för den sista gångsträckan.",
+      "notes": [
+        "Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan."
+      ]
     },
     {
       "id": "olympiaskolan",
@@ -811,20 +820,21 @@
       "id": "odakra-toftavallen",
       "type": "bus-stop",
       "appName": "Spritan, Ödåkra Fabriksgatan – Toftavallen",
-      "query": "Toftavallen, Ödåkra, Sverige",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Toftavallen%2C+%C3%96d%C3%A5kra%2C+Sverige",
-      "matchedName": "Toftavallen / Gläntanskolan",
+      "query": "Spritan, Ödåkra, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Spritan%2C+%C3%96d%C3%A5kra%2C+Sverige",
+      "matchedName": "Spritan",
       "mapName": "Toftavallen, Ödåkra, D1",
       "mapCell": "D1",
       "mapStop": "Toftavallen / Gläntanskolan",
-      "landmark": "Gläntanskolan, Ödåkra station",
+      "landmark": "Ödåkra spritfabrik vid Fabriksgatan, Ödåkra station",
       "confidence": "medium",
       "verificationStatus": "probable",
       "sourceUrls": [
         "data/eskilscupen-karta-2025.pdf",
-        "https://spritan.com/"
+        "https://spritan.com/",
+        "https://visithelsingborg.com/plats/spritan/"
       ],
-      "reasoning": "Kartans H-symbol heter \"Toftavallen Gläntanskolan\" och ligger vid spelplatsen i D1. 2026 års tidtabell kallar hållplatsen \"Spritan, Ödåkra Fabriksgatan – Toftavallen\", vilket pekar på ett annat läge vid den gamla spritfabriken. Namnen skiljer sig mellan åren, så läget är inte fullt belagt.",
+      "reasoning": "2026 års tidtabell kallar hållplatsen \"Spritan, Ödåkra Fabriksgatan – Toftavallen\" och sätter alltså påstigningsplatsen först. Spritan är den gamla spritfabriken vid Fabriksgatan, ett namngivet besöksmål. Kartans H-symbol 2025 heter \"Toftavallen Gläntanskolan\" och ligger vid spelplatsen — ett annat läge. Under bussresan gäller tidtabellens hållplats; spelplatsen Toftavallen har en egen post för den sista gångsträckan.",
       "notes": [
         "Hållplatsnamnet skiljer sig mellan kartan 2025 och tidtabellen 2026."
       ]

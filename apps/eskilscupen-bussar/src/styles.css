@@ -371,6 +371,20 @@ input[type='time'] {
   margin-right: 0.35rem;
 }
 
+/* Sista gångsträckan från hållplatsen till planen. */
+.final-walk {
+  margin: 0.55rem 0 0;
+  padding: 0.35rem 0.6rem;
+  background: #e6f3ec;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--green-dark);
+}
+
+.final-walk-icon {
+  margin-right: 0.35rem;
+}
+
 .link {
   background: none;
   border: none;

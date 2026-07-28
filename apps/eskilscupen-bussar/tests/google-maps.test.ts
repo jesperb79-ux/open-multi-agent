@@ -5,6 +5,12 @@ import { findJourneys } from '../src/planner/findJourneys'
 import type { Journey } from '../src/types'
 import { parseMapsFlag } from '../src/maps/feature-flag'
 import { journeyLinks, linkKey } from '../src/maps/journey-links'
+import {
+  finalWalkTarget,
+  sharesTarget,
+  stopIdsForVenue,
+  venueIdsForStop,
+} from '../src/maps/venue-stops'
 import matchesDocument from '../data/google-maps-matches.json'
 import {
   SIGNAGE_NOTICE,
@@ -73,9 +79,11 @@ describe('söklänk', () => {
     expect(paramsOf(mapsSearchUrl(larod!.query)).get('query')).toBe(larod!.query)
   })
 
-  it('en hållplats får en sökfras ur kartans namn', () => {
+  it('en hållplats får en sökfras som pekar på påstigningsplatsen', () => {
+    // Tidtabellen kallar hållplatsen "Filbornaskolan / Filborna IP". Bussen
+    // stannar vid skolan; planen är ett eget mål med en egen post.
     const stop = mapsLocationForStop('filborna-ip')
-    expect(stop?.query).toBe('Filborna IP, Helsingborg, Sverige')
+    expect(stop?.query).toBe('Filbornaskolan, Helsingborg, Sverige')
     expect(paramsOf(mapsSearchUrl(stop!.query)).get('query')).toBe(stop!.query)
   })
 
@@ -226,8 +234,9 @@ describe('täckning', () => {
   it('en verifierad hållplats får en Navigera-länk', () => {
     const stop = mapsLocationForStop('filborna-ip')
     expect(stop?.verificationStatus).toBe('verified-against-official-map')
-    // Kartans H-symbol heter "Filborna IP", inte Filbornaskolan.
-    expect(stop?.query).toBe('Filborna IP, Helsingborg, Sverige')
+    // Hållplatsen är skolan, inte planen — de har varsin post.
+    expect(stop?.query).toBe('Filbornaskolan, Helsingborg, Sverige')
+    expect(mapsLocationForVenue('filborna-ip')?.query).toBe('Filborna IP, Helsingborg, Sverige')
     expect(stop?.directionsUrl).toContain('/maps/dir/')
   })
 
@@ -510,9 +519,9 @@ describe('antal Navigera-länkar per resa', () => {
 
   it('länkarna renderas bara från resekortet', () => {
     const card = readFileSync(new URL('../src/components/JourneyCard.tsx', import.meta.url), 'utf8')
-    expect(card).toContain('journeyLinks(journey)')
-    // Tre ställen: påstigning, byte och slutmål.
-    expect((card.match(/<MapsLinks /g) ?? []).length).toBe(3)
+    expect(card).toContain('journeyLinks(journey, destinationVenueId)')
+    // Fyra ställen: påstigning, byte, sluthållplats och sista gångsträckan.
+    expect((card.match(/<MapsLinks /g) ?? []).length).toBe(4)
   })
 })
 
@@ -626,5 +635,196 @@ describe('sökfraser som kan ge fel ort', () => {
     })[0]
     const linked = [...journeyLinks(journey).keys()].map((key) => key.split(':')[1])
     expect(linked).not.toContain('morarp-vidablick-ip')
+  })
+})
+
+/**
+ * Under bussresan är hållplatsen det som gäller, aldrig spelplanen.
+ * Cupbussen stannar vid en skola, en station eller en tillfällig hållplats,
+ * ibland flera hundra meter från planen. Spelplatsen är målet först när
+ * bussresan är slut — och bara när den ligger någon annanstans än hållplatsen.
+ */
+describe('hållplats först, spelplats sist', () => {
+  const journeyFor = (originStop: string, destinationStop: string, time: string, serviceId: string) =>
+    findJourneys({ connections, originStop, destinationStop, earliestDeparture: time, serviceId })[0]
+
+  it('första länken använder resans påstigningshållplats', () => {
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    const links = journeyLinks(journey, 'filborna-ip')
+    const start = links.get(linkKey('start', journey.legs[0].fromStop))
+
+    expect(start).toBeDefined()
+    expect(start!.type).toBe('bus-stop')
+    expect(start).toEqual(mapsLocationForStop(journey.legs[0].fromStop))
+  })
+
+  it('startplanen får ingen egen länk när man ska gå därifrån', () => {
+    // Västergårds IP nås från Adolfsberg, 300 m bort. Startlänken ska peka på
+    // hållplatsen — planen är ju där resenären redan står.
+    const journey = journeyFor('vastergard-ip', 'norrvalla-ip', '09:00', 'fre-lor')
+    const links = journeyLinks(journey, 'norrvalla-ip')
+
+    expect(links.has(linkKey('venue', 'vastergard-ip'))).toBe(false)
+    const urls = [...links.values()].map((l) => l.directionsUrl)
+    expect(urls).not.toContain(mapsLocationForVenue('vastergard-ip')!.directionsUrl)
+    expect(links.get(linkKey('start', 'vastergard-ip'))!.query).toBe(
+      'Adolfsberg, Helsingborg, Sverige',
+    )
+  })
+
+  it('byteslänkar använder byteshållplatsens stopId', () => {
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    expect(journey.transfers).toBeGreaterThan(0)
+    const links = journeyLinks(journey, 'filborna-ip')
+
+    for (const transfer of journey.transfersDetail) {
+      const link = links.get(linkKey('transfer', transfer.stopId))
+      if (!link) continue
+      expect(link.type, transfer.stopId).toBe('bus-stop')
+      expect(link, transfer.stopId).toEqual(mapsLocationForStop(transfer.stopId))
+    }
+  })
+
+  it('alla länkar under bussresan är hållplatser, aldrig spelplatser', () => {
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    const links = journeyLinks(journey, 'filborna-ip')
+
+    for (const [key, location] of links) {
+      if (key.startsWith('venue:')) continue
+      expect(location.type, key).toBe('bus-stop')
+    }
+  })
+
+  it('sista länken är spelplatsen först när den skiljer sig från sluthållplatsen', () => {
+    // Filborna IP nås från Filbornaskolan — två olika mål, alltså två knappar.
+    const journey = journeyFor('larods-ip', 'filborna-ip', '10:00', 'fre-lor')
+    const links = journeyLinks(journey, 'filborna-ip')
+    const venue = links.get(linkKey('venue', 'filborna-ip'))
+
+    expect(venue).toBeDefined()
+    expect(venue!.type).toBe('venue')
+    expect(venue!.query).toBe('Filborna IP, Helsingborg, Sverige')
+    expect(links.get(linkKey('destination', 'filborna-ip'))!.query).toBe(
+      'Filbornaskolan, Helsingborg, Sverige',
+    )
+  })
+
+  it('spelplatsen får ingen egen länk när hållplatsen ligger på planen', () => {
+    // Norrvalla IP har hållplatsen på planen. En knapp räcker.
+    const journey = journeyFor('larods-ip', 'norrvalla-ip', '10:00', 'fre-lor')
+    const links = journeyLinks(journey, 'norrvalla-ip')
+
+    expect(sharesTarget('norrvalla-ip', 'norrvalla-ip')).toBe(true)
+    expect(links.has(linkKey('venue', 'norrvalla-ip'))).toBe(false)
+    expect(links.has(linkKey('destination', 'norrvalla-ip'))).toBe(true)
+  })
+
+  it('spelplatsen får ingen länk när resan slutar vid en annan hållplats', () => {
+    // Väljer resenären ingen spelplats som mål finns inget att gå till.
+    const journey = journeyFor('larods-ip', 'norrvalla-ip', '10:00', 'fre-lor')
+    expect(journeyLinks(journey, undefined).has(linkKey('venue', 'filborna-ip'))).toBe(false)
+    // Och en spelplats som inte nås från sluthållplatsen kopplas aldrig på.
+    expect(finalWalkTarget('raa-ip', 'norrvalla-ip')).toBeUndefined()
+  })
+
+  it('samma URL visas aldrig dubbelt, inte heller med spelplatsen inräknad', () => {
+    const cases: [string, string, string, string, string, string | undefined][] = [
+      ['Laröd → Filborna', 'larods-ip', 'filborna-ip', '10:00', 'fre-lor', 'filborna-ip'],
+      ['Laröd → Norrvalla', 'larods-ip', 'norrvalla-ip', '10:00', 'fre-lor', 'norrvalla-ip'],
+      ['Rydebäck → Hedens', 'rydeback-ip', 'hedens-ip', '08:00', 'fre-lor', 'hedens-ip'],
+      ['Norrvalla → Västergård', 'norrvalla-ip', 'vastergard-ip', '09:00', 'fre-lor', 'vastergard-ip'],
+      ['Norrvalla → Toftavallen', 'norrvalla-ip', 'odakra-toftavallen', '09:00', 'fre-lor', 'toftavallen'],
+      ['Norrvalla → Olympia', 'norrvalla-ip', 'olympiaskolan', '09:00', 'fre-lor', 'olympia'],
+      ['Norrvalla → Maria Park', 'norrvalla-ip', 'maria-park', '09:00', 'fre-lor', 'maria-park-ip'],
+      ['Laröd → Harlyckan', 'larods-ip', 'elinebergsplatsen', '10:00', 'fre-lor', 'harlyckan-ip'],
+    ]
+
+    for (const [name, from, to, time, service, venueId] of cases) {
+      const journey = journeyFor(from, to, time, service)
+      expect(journey, name).toBeDefined()
+      const urls = [...journeyLinks(journey, venueId).values()].map((l) => l.directionsUrl)
+      expect(new Set(urls).size, name).toBe(urls.length)
+    }
+  })
+})
+
+/**
+ * De platser där hållplatsen och planen är två skilda ställen. Blandas de ihop
+ * skickas resenären till fel sida av området — eller 300 m bort.
+ */
+describe('hållplats och spelplats hålls isär', () => {
+  const distinct = (venueId: string, stopId: string) => {
+    const venue = mapsLocationForVenue(venueId)!
+    const stop = mapsLocationForStop(stopId)!
+    expect(venue, venueId).toBeDefined()
+    expect(stop, stopId).toBeDefined()
+    expect(venue.query, `${venueId} / ${stopId}`).not.toBe(stop.query)
+    expect(venue.directionsUrl, `${venueId} / ${stopId}`).not.toBe(stop.directionsUrl)
+    expect(sharesTarget(venueId, stopId), `${venueId} / ${stopId}`).toBe(false)
+  }
+
+  it('Högastensskolan och Hedens IP är olika mål', () => {
+    distinct('hedens-ip', 'hedens-ip')
+    expect(mapsLocationForStop('hedens-ip')!.query).toBe('Högastensskolan, Helsingborg, Sverige')
+    expect(mapsLocationForVenue('hedens-ip')!.query).toBe('Hedens IP, Helsingborg, Sverige')
+  })
+
+  it('Filbornaskolan och Filborna IP är olika mål', () => {
+    distinct('filborna-ip', 'filborna-ip')
+    expect(mapsLocationForStop('filborna-ip')!.query).toBe('Filbornaskolan, Helsingborg, Sverige')
+    expect(mapsLocationForVenue('filborna-ip')!.query).toBe('Filborna IP, Helsingborg, Sverige')
+  })
+
+  it('Adolfsberg och Västergårds IP är olika mål', () => {
+    // Tidtabellen anger själv 300 m mellan hållplats och plan.
+    distinct('vastergard-ip', 'vastergard-ip')
+    expect(mapsLocationForStop('vastergard-ip')!.query).toBe('Adolfsberg, Helsingborg, Sverige')
+  })
+
+  it('Spritan och Toftavallen är olika mål', () => {
+    distinct('toftavallen', 'odakra-toftavallen')
+    expect(mapsLocationForStop('odakra-toftavallen')!.query).toBe('Spritan, Ödåkra, Sverige')
+  })
+
+  it('Olympiaskolan och Olympiafältet är olika mål', () => {
+    distinct('olympia', 'olympiaskolan')
+  })
+
+  it('Maria Parkskolan och Maria Park fotbollsplan är olika mål', () => {
+    distinct('maria-park-ip', 'maria-park')
+  })
+
+  it('Harlyckans två hållplatser förblir separata och skilda från planen', () => {
+    distinct('harlyckan-ip', 'elinebergsplatsen')
+    distinct('harlyckan-ip', 'elinebergskyrkan')
+    const platsen = mapsLocationForStop('elinebergsplatsen')!
+    const kyrkan = mapsLocationForStop('elinebergskyrkan')!
+    expect(platsen.directionsUrl).not.toBe(kyrkan.directionsUrl)
+    // Båda hållplatserna leder till samma plan.
+    expect(stopIdsForVenue('harlyckan-ip')).toEqual(['elinebergsplatsen', 'elinebergskyrkan'])
+    expect(venueIdsForStop('elinebergskyrkan')).toContain('harlyckan-ip')
+  })
+
+  it('en osäker hållplats behåller reservationen i stället för att peka på planen', () => {
+    for (const stopId of ['hedens-ip', 'filborna-ip', 'vastergard-ip', 'odakra-toftavallen']) {
+      const stop = mapsLocationForStop(stopId)!
+      expect(stop.confidence, stopId).toBe('medium')
+      expect(needsSignageNotice(stop), stopId).toBe(true)
+      // Sökfrasen får inte vara planens.
+      const venueIds = venueIdsForStop(stopId)
+      for (const venueId of venueIds) {
+        expect(stop.query, `${stopId} → ${venueId}`).not.toBe(mapsLocationForVenue(venueId)?.query)
+      }
+    }
+  })
+
+  it('spelplatser med hållplatsen på planen delar mål', () => {
+    // Elva av femton. Där ska ingen extra knapp dyka upp.
+    const shared = ['norrvalla-ip', 'attekulla-ip', 'raa-ip', 'orby-ip', 'rydeback-ip', 'larods-ip']
+    for (const venueId of shared) {
+      for (const stopId of stopIdsForVenue(venueId)) {
+        expect(sharesTarget(venueId, stopId), `${venueId} / ${stopId}`).toBe(true)
+      }
+    }
   })
 })

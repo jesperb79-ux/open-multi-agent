@@ -193,12 +193,17 @@ const STOPS = {
     sourceUrls: [CUP_MAP], reasoning: 'H-symbol "Råå IP" vid den gröna spelplatsen i C5 D5.',
   },
   'hedens-ip': {
-    query: 'Hedens IP, Helsingborg, Sverige', matchedName: 'Hedens IP',
+    // Hållplatsen, inte planen. Kartans H-symbol bär planens namn, men
+    // tidtabellen kallar påstigningsplatsen Högastensskolan. Den som ska
+    // kliva på bussen ska till skolan.
+    query: 'Högastensskolan, Helsingborg, Sverige', matchedName: 'Högastensskolan',
     mapName: 'Hedens IP, Helsingborg, C5', mapCell: 'C5', mapStop: 'Hedens IP',
-    landmark: 'Högastenshallen, Högastensskolan',
-    confidence: 'high', verificationStatus: 'verified-against-official-map',
-    sourceUrls: [CUP_MAP],
-    reasoning: 'Kartans H-symbol heter "Hedens IP", inte Högastensskolan. Sökfrasen är ändrad till hållplatsens riktiga namn; skolan ligger intill.',
+    landmark: 'Högastenshallen, Hedens IP',
+    confidence: 'medium', verificationStatus: 'verified-against-official-map',
+    sourceUrls: [CUP_MAP, 'https://helsingborg.se/kommunala-grundskolor/hogastensskolan/'],
+    reasoning:
+      'Kartans H-symbol i C5 heter "Hedens IP", men 2026 års tidtabell kallar hållplatsen "Högastensskolan / Hedens IP". Under bussresan gäller hållplatsen: sökfrasen pekar på skolan, som är ett namngivet landmärke intill planen. Spelplatsen Hedens IP har en egen post och används för den sista gångsträckan.',
+    notes: ['Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan.'],
   },
   'attekulla-ip': {
     query: 'Ättekulla IP, Helsingborg, Sverige', matchedName: 'Ättekulla IP',
@@ -250,21 +255,34 @@ const STOPS = {
     sourceUrls: [CUP_MAP], reasoning: 'H-symbol vid skolan i D4.',
   },
   'vastergard-ip': {
-    query: 'Västergårds IP, Helsingborg, Sverige', matchedName: 'Västergårds IP',
+    // Här är felet störst: både kartan och tidtabellen säger att det är
+    // 300 m mellan hållplatsen och planen. Att navigera till planen skulle
+    // skicka resenären 300 m fel när bussen ska hinnas med.
+    query: 'Adolfsberg, Helsingborg, Sverige', matchedName: 'Adolfsberg',
     mapName: 'Västergårds IP, D4', mapCell: 'D4', mapStop: 'Västergårds IP',
-    landmark: 'Västergårdshallen, Adolfsberg',
-    confidence: 'high', verificationStatus: 'verified-against-official-map',
-    sourceUrls: [CUP_MAP],
-    reasoning: 'Kartans H-symbol heter "Västergårds IP", inte Adolfsberg. Tidtabellens "Adolfsberg (Vätergård IP 300m)" beskriver stadsdelen och avståndet; sökfrasen följer kartans namn.',
-    notes: ['Kartan anger 300 m mellan hållplats och plan.'],
+    landmark: 'Adolfsberg, väster om Västergårds IP',
+    confidence: 'medium', verificationStatus: 'verified-against-official-map',
+    sourceUrls: [
+      CUP_MAP,
+      'https://helsingborg.se/bo-bygga-och-miljo/bostader/bostadsomraden-och-samhallen/adolfsberg-ragnvalla-vastergard/',
+    ],
+    reasoning:
+      'Tidtabellen kallar hållplatsen "Adolfsberg (Västergård IP 300 m)" och kartan skriver ut samma 300 m. Hållplatsen är alltså inte planen. Sökfrasen pekar på Adolfsberg, som är hållplatsens namn; exakt läge inom stadsdelen går inte att läsa ur kartan. Spelplatsen Västergårds IP har en egen post för de sista 300 metrarna.',
+    notes: [
+      'Hållplatsen ligger ca 300 m från planen. Exakt läge inom Adolfsberg framgår inte av kartan.',
+    ],
   },
   'filborna-ip': {
-    query: 'Filborna IP, Helsingborg, Sverige', matchedName: 'Filborna IP',
+    // Hållplatsen heter Filbornaskolan i tidtabellen. Skolan är ett eget
+    // landmärke — planen ligger intill, men det är inte där bussen stannar.
+    query: 'Filbornaskolan, Helsingborg, Sverige', matchedName: 'Filbornaskolan',
     mapName: 'Filborna IP, C3 D3', mapCell: 'C3 D3', mapStop: 'Filborna IP',
-    landmark: 'Filbornaskolan, Nanny Palmkvistskolan',
-    confidence: 'high', verificationStatus: 'verified-against-official-map',
-    sourceUrls: [CUP_MAP],
-    reasoning: 'Kartans H-symbol heter "Filborna IP" och ligger vid Filbornaskolan. Sökfrasen är ändrad från skolan till hållplatsens riktiga namn.',
+    landmark: 'Filborna IP, Nanny Palmkvistskolan',
+    confidence: 'medium', verificationStatus: 'verified-against-official-map',
+    sourceUrls: [CUP_MAP, CITY],
+    reasoning:
+      'Kartans H-symbol i C3 D3 heter "Filborna IP" och ligger vid Filbornaskolan, som är tidtabellens namn på hållplatsen. Under bussresan gäller hållplatsen, alltså skolan. Spelplatsen Filborna IP har en egen post för den sista gångsträckan.',
+    notes: ['Hållplats, inte spelplats. Exakt läge vid skolan framgår inte av kartan.'],
   },
   olympiaskolan: {
     query: 'Olympiaskolan, Helsingborg, Sverige', matchedName: 'Olympiaskolan',
@@ -368,12 +386,15 @@ const STOPS = {
     reasoning: 'H-symbolen heter "Allerums IP" men anläggningen heter Ryavallen enligt kartans indexlista. Sökfrasen använder anläggningens namn.',
   },
   'odakra-toftavallen': {
-    query: 'Toftavallen, Ödåkra, Sverige', matchedName: 'Toftavallen / Gläntanskolan',
+    // 2026 års tidtabell namnger påstigningsplatsen först: Spritan vid
+    // Fabriksgatan. Toftavallen är målet man går till, inte hållplatsen.
+    query: 'Spritan, Ödåkra, Sverige', matchedName: 'Spritan',
     mapName: 'Toftavallen, Ödåkra, D1', mapCell: 'D1', mapStop: 'Toftavallen / Gläntanskolan',
-    landmark: 'Gläntanskolan, Ödåkra station',
+    landmark: 'Ödåkra spritfabrik vid Fabriksgatan, Ödåkra station',
     confidence: 'medium', verificationStatus: 'probable',
-    sourceUrls: [CUP_MAP, SPRITAN],
-    reasoning: 'Kartans H-symbol heter "Toftavallen Gläntanskolan" och ligger vid spelplatsen i D1. 2026 års tidtabell kallar hållplatsen "Spritan, Ödåkra Fabriksgatan – Toftavallen", vilket pekar på ett annat läge vid den gamla spritfabriken. Namnen skiljer sig mellan åren, så läget är inte fullt belagt.',
+    sourceUrls: [CUP_MAP, SPRITAN, 'https://visithelsingborg.com/plats/spritan/'],
+    reasoning:
+      '2026 års tidtabell kallar hållplatsen "Spritan, Ödåkra Fabriksgatan – Toftavallen" och sätter alltså påstigningsplatsen först. Spritan är den gamla spritfabriken vid Fabriksgatan, ett namngivet besöksmål. Kartans H-symbol 2025 heter "Toftavallen Gläntanskolan" och ligger vid spelplatsen — ett annat läge. Under bussresan gäller tidtabellens hållplats; spelplatsen Toftavallen har en egen post för den sista gångsträckan.',
     notes: ['Hållplatsnamnet skiljer sig mellan kartan 2025 och tidtabellen 2026.'],
   },
   'ronnowska-skolan': {
