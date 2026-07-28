@@ -322,13 +322,23 @@ const STOPS = {
     notes: ['Linje 17 har lagts om mellan 2025 och 2026. Kräver uppgift från arrangören.'],
   },
   flygfaltet: {
-    query: 'Flygfältet, Helsingborg, Sverige', matchedName: 'Flygfältet',
+    // "Flygfältet, Helsingborg" öppnade Ängelholms flygplats, som heter
+    // Ängelholm–Helsingborg Airport. Ordet Flygfältet får därför inte stå
+    // kvar i sökfrasen — kartans andra namn på platsen är entydigt.
+    query: 'Filborna vattentorn, Helsingborg, Sverige', matchedName: 'Vattentornet',
     mapName: 'Flygfältet / Vattentornet, D3', mapCell: 'D3', mapStop: 'Flygfältet',
-    landmark: 'Vattentornet, Långeberga, öster om Filborna',
+    landmark: 'Filborna vattentorn vid Österleden i höjd med Filbornavägen, öster om Filborna',
     confidence: 'medium', verificationStatus: 'verified-against-official-map',
-    sourceUrls: [CUP_MAP],
-    reasoning: 'Kartan visar "Flygfältet / Vattentornet, D3" som en egen grön spelplats med H-symbol. Det är alltså en riktig spelplats öster om Filborna, inte en oklar ortsbeskrivning.',
-    notes: ['Läget är belagt, men "Flygfältet" är en vansklig sökterm i Google Maps.'],
+    sourceUrls: [
+      CUP_MAP,
+      'https://helsingborg.se/trafik-och-stadsplanering/trafik-och-byggprojekt/trafik-och-stadsmiljo/helsingborgs-nya-vattentorn/',
+      'https://sv.wikipedia.org/wiki/Filborna_vattentorn',
+    ],
+    reasoning:
+      'Kartan visar "Flygfältet / Vattentornet, D3" som en egen grön spelplats med H-symbol öster om Filborna. Vattentornet är samma byggnad som Helsingborgs stad och NSVA kallar Filborna vattentorn: 40 meter högt, invigt 2022, vid Österleden i höjd med Filbornavägen. Det är ett namngivet landmärke i rätt kartcell, till skillnad från ordet Flygfältet.',
+    notes: [
+      'Sökfrasen pekar på vattentornet, inte på spelplanens kortsida. Exakt vägkant framgår inte av kartan.',
+    ],
   },
   'maria-park': {
     query: 'Maria Parkskolan, Helsingborg, Sverige', matchedName: 'Maria Parkskolan',

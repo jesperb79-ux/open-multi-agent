@@ -716,21 +716,23 @@
       "id": "flygfaltet",
       "type": "bus-stop",
       "appName": "Flygfältet (Vattentornet)",
-      "query": "Flygfältet, Helsingborg, Sverige",
-      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Flygf%C3%A4ltet%2C+Helsingborg%2C+Sverige",
-      "matchedName": "Flygfältet",
+      "query": "Filborna vattentorn, Helsingborg, Sverige",
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Filborna+vattentorn%2C+Helsingborg%2C+Sverige",
+      "matchedName": "Vattentornet",
       "mapName": "Flygfältet / Vattentornet, D3",
       "mapCell": "D3",
       "mapStop": "Flygfältet",
-      "landmark": "Vattentornet, Långeberga, öster om Filborna",
+      "landmark": "Filborna vattentorn vid Österleden i höjd med Filbornavägen, öster om Filborna",
       "confidence": "medium",
       "verificationStatus": "verified-against-official-map",
       "sourceUrls": [
-        "data/eskilscupen-karta-2025.pdf"
+        "data/eskilscupen-karta-2025.pdf",
+        "https://helsingborg.se/trafik-och-stadsplanering/trafik-och-byggprojekt/trafik-och-stadsmiljo/helsingborgs-nya-vattentorn/",
+        "https://sv.wikipedia.org/wiki/Filborna_vattentorn"
       ],
-      "reasoning": "Kartan visar \"Flygfältet / Vattentornet, D3\" som en egen grön spelplats med H-symbol. Det är alltså en riktig spelplats öster om Filborna, inte en oklar ortsbeskrivning.",
+      "reasoning": "Kartan visar \"Flygfältet / Vattentornet, D3\" som en egen grön spelplats med H-symbol öster om Filborna. Vattentornet är samma byggnad som Helsingborgs stad och NSVA kallar Filborna vattentorn: 40 meter högt, invigt 2022, vid Österleden i höjd med Filbornavägen. Det är ett namngivet landmärke i rätt kartcell, till skillnad från ordet Flygfältet.",
       "notes": [
-        "Läget är belagt, men \"Flygfältet\" är en vansklig sökterm i Google Maps."
+        "Sökfrasen pekar på vattentornet, inte på spelplanens kortsida. Exakt vägkant framgår inte av kartan."
       ]
     },
     {

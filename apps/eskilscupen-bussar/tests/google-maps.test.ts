@@ -515,3 +515,116 @@ describe('antal Navigera-länkar per resa', () => {
     expect((card.match(/<MapsLinks /g) ?? []).length).toBe(3)
   })
 })
+
+/**
+ * Sökfraserna måste peka ut rätt ort. "Flygfältet, Helsingborg" öppnade
+ * Ängelholms flygplats, vars officiella namn är Ängelholm–Helsingborg Airport
+ * — ordet Helsingborg i frasen räckte alltså inte för att hålla träffen kvar i
+ * Helsingborg. Ett generiskt ord plus ortsnamn är inte en entydig sökfras.
+ */
+describe('sökfraser som kan ge fel ort', () => {
+  /** Orter dit ingen cupbuss går, men dit en generisk sökfras kan leda. */
+  const WRONG_PLACES = [
+    'ängelholm',
+    'angelholm',
+    'flygplats',
+    'airport',
+    'malmö',
+    'landskrona',
+    'lund',
+    'stockholm',
+  ]
+
+  const allQueries = matchesDocument.matches.map((match) => ({ id: match.id, query: match.query }))
+
+  it('Flygfältet leder aldrig mot Ängelholm', () => {
+    const stop = mapsLocationForStop('flygfaltet')!
+    const searched = [stop.query, decodeURIComponent(stop.showUrl), decodeURIComponent(stop.directionsUrl)]
+
+    for (const text of searched) {
+      expect(text.toLowerCase(), text).not.toContain('ängelholm')
+      expect(text.toLowerCase(), text).not.toContain('flygplats')
+      expect(text.toLowerCase(), text).not.toContain('airport')
+      // Ordet Flygfältet är självt draget mot Ängelholm–Helsingborg Airport.
+      expect(text.toLowerCase(), text).not.toContain('flygfält')
+    }
+  })
+
+  it('Flygfältet pekar på kartans namngivna landmärke i D3', () => {
+    const stop = mapsLocationForStop('flygfaltet')!
+    expect(stop.query).toBe('Filborna vattentorn, Helsingborg, Sverige')
+    expect(stop.query).toContain('Helsingborg')
+    const match = matchesDocument.matches.find((m) => m.id === 'flygfaltet' && m.type === 'bus-stop')!
+    expect(match.mapCell).toBe('D3')
+    // Läget är belagt på kartan, men vägkanten är det inte.
+    expect(stop.confidence).toBe('medium')
+    expect(needsSignageNotice(stop)).toBe(true)
+  })
+
+  it('ingen sökfras nämner en ort utanför cupens område', () => {
+    // Hela ord, annars fastnar Gustavslundsskolan på "lund".
+    const mentions = (query: string, place: string) =>
+      new RegExp(String.raw`(?<!\p{L})${place}(?!\p{L})`, 'iu').test(query)
+
+    for (const { id, query } of allQueries) {
+      for (const wrong of WRONG_PLACES) {
+        expect(mentions(query, wrong), `${id}: ${query} nämner ${wrong}`).toBe(false)
+      }
+    }
+  })
+
+  it('varje sökfras namnger en anläggning, inte bara en ort', () => {
+    // Ortsnamnet ensamt räcker inte — det var precis felet i Flygfältet.
+    const PLACE_NAMES = [
+      'Glumslöv',
+      'Bårslöv',
+      'Gantofta',
+      'Mörarp',
+      'Maria Park',
+      'Olympia',
+      'Påarp',
+      'Ödåkra',
+      'Allerum',
+      'Laröd',
+      'Rydebäck',
+      'Helsingborg',
+    ]
+
+    for (const { id, query } of allQueries) {
+      const named = query.split(',')[0].trim()
+      expect(named.length, `${id}: ${query}`).toBeGreaterThan(0)
+      // Första ledet får inte vara enbart ett ortsnamn.
+      for (const place of PLACE_NAMES) {
+        expect(named.toLowerCase(), `${id}: ${query}`).not.toBe(place.toLowerCase())
+      }
+    }
+  })
+
+  it('de generiska ortsnamnen pekar på rätt anläggning', () => {
+    // Kartans H-symboler ligger vid anläggningen, inte i ortens mitt.
+    expect(mapsLocationForStop('glumslov')!.query).toBe('Glumslövs IP, Glumslöv, Sverige')
+    expect(mapsLocationForStop('barslov')!.query).toBe('Bållevi IP, Bårslöv, Sverige')
+    expect(mapsLocationForStop('gantofta')!.query).toBe('Stendösvallen, Gantofta, Sverige')
+    expect(mapsLocationForStop('maria-park')!.query).toBe('Maria Parkskolan, Helsingborg, Sverige')
+    expect(mapsLocationForStop('olympiaskolan')!.query).toBe('Olympiaskolan, Helsingborg, Sverige')
+    expect(mapsLocationForVenue('olympia')!.query).toBe('Olympiafältet, Helsingborg, Sverige')
+  })
+
+  it('Mörarp visar fortfarande ingen knapp', () => {
+    // Mörarp saknas på 2025 års karta. Ingen länk är bättre än en gissning.
+    expect(mapsLocationForStop('morarp-vidablick-ip')).toBeUndefined()
+    expect(mapsLocationForVenue('morarp-vidablick-ip')).toBeUndefined()
+  })
+
+  it('en obekräftad plats får aldrig en Navigera-länk i en resa', () => {
+    const journey = findJourneys({
+      connections,
+      originStop: 'norrvalla-ip',
+      destinationStop: 'morarp-vidablick-ip',
+      earliestDeparture: '07:00',
+      serviceId: 'sondag',
+    })[0]
+    const linked = [...journeyLinks(journey).keys()].map((key) => key.split(':')[1])
+    expect(linked).not.toContain('morarp-vidablick-ip')
+  })
+})
